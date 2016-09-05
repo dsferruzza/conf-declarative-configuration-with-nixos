@@ -142,6 +142,41 @@
   font-weight: 900;
   font-style: italic; }
 
+@font-face {
+  font-family: 'Roboto Slab';
+  src: url("./lib/roboto-slab-font/fonts/RobotoSlab-Thin.eot");
+  src: url("./lib/roboto-slab-font/fonts/RobotoSlab-Thin.eot?#iefix") format("embedded-opentype"), url("./lib/roboto-slab-font/fonts/RobotoSlab-Thin.woff") format("woff"), url("./lib/roboto-slab-font/fonts/RobotoSlab-Thin.ttf") format("truetype"), url("./lib/roboto-slab-font/fonts/RobotoSlab-Thin.svg#RobotoSlab") format("svg");
+  font-weight: 100;
+  font-style: normal; }
+
+@font-face {
+  font-family: 'Roboto Slab';
+  src: url("./lib/roboto-slab-font/fonts/RobotoSlab-Light.eot");
+  src: url("./lib/roboto-slab-font/fonts/RobotoSlab-Light.eot?#iefix") format("embedded-opentype"), url("./lib/roboto-slab-font/fonts/RobotoSlab-Light.woff") format("woff"), url("./lib/roboto-slab-font/fonts/RobotoSlab-Light.ttf") format("truetype"), url("./lib/roboto-slab-font/fonts/RobotoSlab-Light.svg#RobotoSlab") format("svg");
+  font-weight: 300;
+  font-style: normal; }
+
+@font-face {
+  font-family: 'Roboto Slab';
+  src: url("./lib/roboto-slab-font/fonts/RobotoSlab-Regular.eot");
+  src: url("./lib/roboto-slab-font/fonts/RobotoSlab-Regular.eot?#iefix") format("embedded-opentype"), url("./lib/roboto-slab-font/fonts/RobotoSlab-Regular.woff") format("woff"), url("./lib/roboto-slab-font/fonts/RobotoSlab-Regular.ttf") format("truetype"), url("./lib/roboto-slab-font/fonts/RobotoSlab-Regular.svg#RobotoSlab") format("svg");
+  font-weight: 400;
+  font-style: normal; }
+
+@font-face {
+  font-family: 'Roboto Slab';
+  src: url("./lib/roboto-slab-font/fonts/RobotoSlab-Regular.eot");
+  src: url("./lib/roboto-slab-font/fonts/RobotoSlab-Regular.eot?#iefix") format("embedded-opentype"), url("./lib/roboto-slab-font/fonts/RobotoSlab-Regular.woff") format("woff"), url("./lib/roboto-slab-font/fonts/RobotoSlab-Regular.ttf") format("truetype"), url("./lib/roboto-slab-font/fonts/RobotoSlab-Regular.svg#RobotoSlab") format("svg");
+  font-weight: 500;
+  font-style: normal; }
+
+@font-face {
+  font-family: 'Roboto Slab';
+  src: url("./lib/roboto-slab-font/fonts/RobotoSlab-Bold.eot");
+  src: url("./lib/roboto-slab-font/fonts/RobotoSlab-Bold.eot?#iefix") format("embedded-opentype"), url("./lib/roboto-slab-font/fonts/RobotoSlab-Bold.woff") format("woff"), url("./lib/roboto-slab-font/fonts/RobotoSlab-Bold.ttf") format("truetype"), url("./lib/roboto-slab-font/fonts/RobotoSlab-Bold.svg#RobotoSlab") format("svg");
+  font-weight: 700;
+  font-style: normal; }
+
 /*********************************************
  * GLOBAL STYLES
  *********************************************/
@@ -175,8 +210,8 @@ body {
 .reveal h5,
 .reveal h6 {
   margin: 0 0 20px 0;
-  color: #5ea5ab;
-  font-family: "Lato", sans-serif;
+  color: #2bb2d3;
+  font-family: "Roboto Slab", sans-serif;
   font-weight: normal;
   line-height: 1.2;
   letter-spacing: normal;
@@ -340,20 +375,20 @@ body {
  * LINKS
  *********************************************/
 .reveal a {
-  color: #5ea5ab;
+  color: #2bb2d3;
   text-decoration: none;
   -webkit-transition: color .15s ease;
   -moz-transition: color .15s ease;
   transition: color .15s ease; }
 
 .reveal a:hover {
-  color: #38676b;
+  color: #1a6b7e;
   text-shadow: none;
   border: none; }
 
 .reveal .roll span:after {
   color: #fff;
-  background: #41777c; }
+  background: #1e7c93; }
 
 /*********************************************
  * IMAGES
@@ -375,7 +410,7 @@ body {
 
 .reveal a:hover img {
   background: rgba(255, 255, 255, 0.2);
-  border-color: #5ea5ab;
+  border-color: #2bb2d3;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.55); }
 
 /*********************************************
@@ -383,31 +418,31 @@ body {
  *********************************************/
 .reveal .controls .navigate-left,
 .reveal .controls .navigate-left.enabled {
-  border-right-color: #5ea5ab; }
+  border-right-color: #2bb2d3; }
 
 .reveal .controls .navigate-right,
 .reveal .controls .navigate-right.enabled {
-  border-left-color: #5ea5ab; }
+  border-left-color: #2bb2d3; }
 
 .reveal .controls .navigate-up,
 .reveal .controls .navigate-up.enabled {
-  border-bottom-color: #5ea5ab; }
+  border-bottom-color: #2bb2d3; }
 
 .reveal .controls .navigate-down,
 .reveal .controls .navigate-down.enabled {
-  border-top-color: #5ea5ab; }
+  border-top-color: #2bb2d3; }
 
 .reveal .controls .navigate-left.enabled:hover {
-  border-right-color: #38676b; }
+  border-right-color: #1a6b7e; }
 
 .reveal .controls .navigate-right.enabled:hover {
-  border-left-color: #38676b; }
+  border-left-color: #1a6b7e; }
 
 .reveal .controls .navigate-up.enabled:hover {
-  border-bottom-color: #38676b; }
+  border-bottom-color: #1a6b7e; }
 
 .reveal .controls .navigate-down.enabled:hover {
-  border-top-color: #38676b; }
+  border-top-color: #1a6b7e; }
 
 /*********************************************
  * PROGRESS BAR
@@ -416,29 +451,32 @@ body {
   background: rgba(0, 0, 0, 0.2); }
 
 .reveal .progress span {
-  background: #5ea5ab;
+  background: #2bb2d3;
   -webkit-transition: width 800ms cubic-bezier(0.26, 0.86, 0.44, 0.985);
   -moz-transition: width 800ms cubic-bezier(0.26, 0.86, 0.44, 0.985);
   transition: width 800ms cubic-bezier(0.26, 0.86, 0.44, 0.985); }
 
 .reveal .slides section:first-child h2, .reveal .slides section:first-child h3 {
-  color: #000; }
+  font-family: "Lato", sans-serif; }
 
 .reveal .slides section:first-child h1 {
-  font-size: 2.8275em; }
+  font-size: 2.0735em;
+  color: #2bb2d3; }
 
 .reveal .slides section:first-child h2 {
-  font-size: 1.5825em; }
+  font-size: 1.5825em;
+  color: #e8486a; }
 
 .reveal .slides section:first-child h3 {
-  font-size: 1.1625em; }
+  font-size: 1.1625em;
+  color: #000; }
+
+.reveal .slides section h1 {
+  color: #e8486a; }
 
 .reveal .slides section img {
   border: none;
   box-shadow: none; }
-
-.reveal .slides section #escale {
-  margin-top: 5em; }
 
 .reveal .slides section pre {
   box-shadow: none;
@@ -451,7 +489,7 @@ body {
 .reveal .slide-number {
   font-size: 30px;
   background-color: transparent;
-  color: #5ea5ab; }
+  color: #2bb2d3; }
 
 /* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
 /* Tomorrow Comment */

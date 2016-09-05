@@ -10,13 +10,16 @@
 @import "./lib/lato-font/scss/public-api.scss";
 $lato-font-path: './lib/lato-font/fonts';
 @include lato-render-variants($lato-variants);
+$roboto-slab-font-path: './lib/roboto-slab-font/fonts';
+@import "./lib/roboto-slab-font/roboto-slab.scss";
 
 
 // Override theme settings (see ../template/settings.scss)
 $mainFont: 'Lato', sans-serif;
 $mainColor: #000;
-$headingFont: 'Lato', sans-serif;
-$headingColor: #5ea5ab;
+$headingFont: 'Roboto Slab', sans-serif;
+$headingColor: rgb(43, 178, 211);
+$secondaryHeadingColor: rgb(232, 72, 106);
 $headingTextShadow: none;
 $headingTextTransform: none;
 $backgroundColor: #fff;
@@ -40,20 +43,20 @@ $heading4Size: 1.00em / 2;
 		section {
 			&:first-child {
 				h2, h3 {
-					color: $mainColor;
+					font-family: $mainFont;
 				}
-				h1 { font-size: $heading1Size * 1.5; }
-				h2 { font-size: $heading2Size * 1.5; }
-				h3 { font-size: $heading3Size * 1.5; }
+				h1 { font-size: $heading1Size * 1.1; color: $headingColor; }
+				h2 { font-size: $heading2Size * 1.5; color: $secondaryHeadingColor; }
+				h3 { font-size: $heading3Size * 1.5; color: $mainColor; }
+			}
+
+			h1 {
+				color: $secondaryHeadingColor;
 			}
 
 			img {
 				border: none;
 				box-shadow: none;
-			}
-
-			#escale {
-				margin-top: 5em;
 			}
 
 			pre {

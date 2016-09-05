@@ -10,8 +10,8 @@
   },
   "scripts": {
     "pandocVersion": "pandoc -v",
-    "buildCss": "node-sass escale.scss escale.css",
-    "build": "pandoc --standalone -t revealjs --template=template.html -V revealjs-url=lib/reveal.js -V theme=escale -V history=true -V numbersInHistory=true -V transition=slide -V slideNumber=true -V center=false --no-highlight presentation.md -o index.html",
+    "buildCss": "node-sass sp.scss sp.css",
+    "build": "pandoc --standalone -t revealjs --template=template.html -V revealjs-url=lib/reveal.js -V theme=sp -V history=true -V numbersInHistory=true -V transition=slide -V slideNumber=true -V center=false --no-highlight presentation.md -o index.html",
     "watch": "watch-run -i -p \"presentation.md\" npm run build",
     "push": "git push -u origin master && git push -u origin gh-pages"
   },
