@@ -69,6 +69,10 @@ $heading4Size: 1.00em / 2;
 					overflow: inherit;
 				}
 			}
+
+			blockquote {
+				box-shadow: 0px 0px 4px $headingColor;
+			}
 		}
 	}
 
