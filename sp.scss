@@ -28,10 +28,10 @@ $linkColorHover: darken( $linkColor, 20% );
 $selectionBackgroundColor: rgba(0, 0, 0, 0.99);
 $mainFontSize: 38px;
 
-$heading1Size: 3.77em / 2;
-$heading2Size: 2.11em / 2;
-$heading3Size: 1.55em / 2;
-$heading4Size: 1.00em / 2;
+$heading1Size: 3.77em / 2.1;
+$heading2Size: 2.11em / 2.1;
+$heading3Size: 1.55em / 2.1;
+$heading4Size: 1.00em / 2.1;
 
 
 // Theme template ------------------------------
@@ -111,4 +111,7 @@ $heading4Size: 1.00em / 2;
 	& .hljs-function {
 		color: #000;
 	}
+}
+.hljs-attr {
+	@extend .hljs-name
 }

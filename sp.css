@@ -220,16 +220,16 @@ body {
   word-wrap: break-word; }
 
 .reveal h1 {
-  font-size: 1.885em; }
+  font-size: 1.79524em; }
 
 .reveal h2 {
-  font-size: 1.055em; }
+  font-size: 1.00476em; }
 
 .reveal h3 {
-  font-size: 0.775em; }
+  font-size: 0.7381em; }
 
 .reveal h4 {
-  font-size: 0.5em; }
+  font-size: 0.47619em; }
 
 .reveal h1 {
   text-shadow: none; }
@@ -460,19 +460,19 @@ body {
   font-family: "Lato", sans-serif; }
 
 .reveal .slides section:first-child h1 {
-  font-size: 2.0735em;
+  font-size: 1.97476em;
   margin-top: 20px;
   margin-bottom: 60px;
   color: #2bb2d3; }
 
 .reveal .slides section:first-child h2 {
-  font-size: 1.5825em;
+  font-size: 1.50714em;
   display: inline-block;
   margin-right: 50px;
   color: #e8486a; }
 
 .reveal .slides section:first-child h3 {
-  font-size: 1.1625em;
+  font-size: 1.10714em;
   display: inline-block;
   color: #000; }
 
@@ -511,6 +511,7 @@ body {
 .hljs-template-variable,
 .hljs-tag,
 .hljs-name,
+.hljs-attr,
 .hljs-selector-id,
 .hljs-selector-class,
 .hljs-regexp,
