@@ -45,13 +45,31 @@ $heading4Size: 1.00em / 2;
 				h2, h3 {
 					font-family: $mainFont;
 				}
-				h1 { font-size: $heading1Size * 1.1; color: $headingColor; }
-				h2 { font-size: $heading2Size * 1.5; color: $secondaryHeadingColor; }
-				h3 { font-size: $heading3Size * 1.5; color: $mainColor; }
+
+				h1 {
+					font-size: $heading1Size * 1.1;
+					margin-top: 20px;
+					margin-bottom: 60px;
+					color: $headingColor;
+				}
+
+				h2 {
+					font-size: $heading2Size * 1.5;
+					display: inline-block;
+					margin-right: 50px;
+					color: $secondaryHeadingColor;
+				}
+
+				h3 {
+					font-size: $heading3Size * 1.5;
+					display: inline-block;
+					color: $mainColor;
+				}
 			}
 
 			h1 {
 				color: $secondaryHeadingColor;
+				font-weight: 700;
 			}
 
 			img {

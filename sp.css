@@ -461,18 +461,24 @@ body {
 
 .reveal .slides section:first-child h1 {
   font-size: 2.0735em;
+  margin-top: 20px;
+  margin-bottom: 60px;
   color: #2bb2d3; }
 
 .reveal .slides section:first-child h2 {
   font-size: 1.5825em;
+  display: inline-block;
+  margin-right: 50px;
   color: #e8486a; }
 
 .reveal .slides section:first-child h3 {
   font-size: 1.1625em;
+  display: inline-block;
   color: #000; }
 
 .reveal .slides section h1 {
-  color: #e8486a; }
+  color: #e8486a;
+  font-weight: 700; }
 
 .reveal .slides section img {
   border: none;
