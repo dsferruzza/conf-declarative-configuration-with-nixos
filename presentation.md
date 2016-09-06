@@ -22,3 +22,82 @@ Frequent reviews by the customers (and by the team) are an important part of the
 > We need staging/preprod environments
 
 <figure class="stretch"><img src="img/crash.gif" alt=""></figure>
+
+
+# Staging environments
+
+They should be:
+
+- quick to create
+- quick to configure
+- quick to remove
+- cheap
+- compatible with automatic deployment
+
+<figure class="stretch"><img src="img/cups.gif" alt=""></figure>
+
+
+# About automatic deployment
+
+We use [GitLab](https://about.gitlab.com/)
+
+<figure class="stretch"><img src="img/gitlab.svg" alt=""></figure>
+
+> GitLab unifies chat, issues, code review, CI and CD into a single UI
+
+
+# About automatic deployment
+
+GitLab CI is very flexible:
+
+```yaml
+my_deploy:
+  stage: deploy
+  image: org/mydockerimage
+  script:
+    - echo "I can do anything here"
+    - rsync ./my_projet $USER@$HOST:/var/www/
+  only:
+    - master
+  tags:
+    - docker
+```
+
+
+# Naive solution
+
+We know [Debian](https://www.debian.org/). Let's use Debian!
+
+And let's install **and** *configure*:
+
+- Apache
+- PHP
+- PostgreSQL
+- SSH
+
+*by hand*!
+
+<figure class="stretch"><img src="img/madness.gif" alt=""></figure>
+
+
+# Naive solution
+
+It works but:
+
+- it needs a lot of manual setup<br>=> admins need to be watchful and rigorous
+- environments can diverge<br>=> it can become a mess
+- security/system update can break stuff<br>=> you need to fix environments one by one
+- it's soooo **boring** to use
+
+> Boring means I will make errors
+
+
+# Naive solution
+
+We did it for a while.
+
+*1 star. Would not recommend.*
+
+<figure class="stretch"><img src="img/rain.gif" alt=""></figure>
+
+So, can we do better?

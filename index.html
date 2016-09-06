@@ -57,6 +57,81 @@
 <img src="img/crash.gif" alt="">
 </figure>
 </section>
+<section id="staging-environments" class="slide level1">
+<h1>Staging environments</h1>
+<p>They should be:</p>
+<ul>
+<li>quick to create</li>
+<li>quick to configure</li>
+<li>quick to remove</li>
+<li>cheap</li>
+<li>compatible with automatic deployment</li>
+</ul>
+<figure class="stretch">
+<img src="img/cups.gif" alt="">
+</figure>
+</section>
+<section id="about-automatic-deployment" class="slide level1">
+<h1>About automatic deployment</h1>
+<p>We use <a href="https://about.gitlab.com/">GitLab</a></p>
+<figure class="stretch">
+<img src="img/gitlab.svg" alt="">
+</figure>
+<blockquote>
+<p>GitLab unifies chat, issues, code review, CI and CD into a single UI</p>
+</blockquote>
+</section>
+<section id="about-automatic-deployment-1" class="slide level1">
+<h1>About automatic deployment</h1>
+<p>GitLab CI is very flexible:</p>
+<pre class="yaml"><code>my_deploy:
+  stage: deploy
+  image: org/mydockerimage
+  script:
+    - echo &quot;I can do anything here&quot;
+    - rsync ./my_projet $USER@$HOST:/var/www/
+  only:
+    - master
+  tags:
+    - docker</code></pre>
+</section>
+<section id="naive-solution" class="slide level1">
+<h1>Naive solution</h1>
+<p>We know <a href="https://www.debian.org/">Debian</a>. Let's use Debian!</p>
+<p>And let's install <strong>and</strong> <em>configure</em>:</p>
+<ul>
+<li>Apache</li>
+<li>PHP</li>
+<li>PostgreSQL</li>
+<li>SSH</li>
+</ul>
+<p><em>by hand</em>!</p>
+<figure class="stretch">
+<img src="img/madness.gif" alt="">
+</figure>
+</section>
+<section id="naive-solution-1" class="slide level1">
+<h1>Naive solution</h1>
+<p>It works but:</p>
+<ul>
+<li>it needs a lot of manual setup<br>=&gt; admins need to be watchful and rigorous</li>
+<li>environments can diverge<br>=&gt; it can become a mess</li>
+<li>security/system update can break stuff<br>=&gt; you need to fix environments one by one</li>
+<li>it's soooo <strong>boring</strong> to use</li>
+</ul>
+<blockquote>
+<p>Boring means I will make errors</p>
+</blockquote>
+</section>
+<section id="naive-solution-2" class="slide level1">
+<h1>Naive solution</h1>
+<p>We did it for a while.</p>
+<p><em>1 star. Would not recommend.</em></p>
+<figure class="stretch">
+<img src="img/rain.gif" alt="">
+</figure>
+<p>So, can we do better?</p>
+</section>
     </div>
   </div>
 
