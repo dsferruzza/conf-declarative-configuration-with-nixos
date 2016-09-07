@@ -86,7 +86,7 @@
 <p>GitLab CI is very flexible:</p>
 <pre class="yaml"><code>my_deploy:
   stage: deploy
-  image: org/mydockerimage
+  image: org/my_docker_image
   script:
     - echo &quot;I can do anything here&quot;
     - rsync ./my_projet $USER@$HOST:/var/www/
@@ -120,7 +120,7 @@
 <li>it's soooo <strong>boring</strong> to use</li>
 </ul>
 <blockquote>
-<p>Boring means I will make errors</p>
+<p>Boring means I will make mistakes</p>
 </blockquote>
 </section>
 <section id="naive-solution-2" class="slide level1">
@@ -131,6 +131,59 @@
 <img src="img/rain.gif" alt="">
 </figure>
 <p>So, can we do better?</p>
+</section>
+<section id="dockerfile" class="slide level1">
+<h1>Dockerfile</h1>
+<p>At that time, people were talking a lot about Docker. So I took a look.</p>
+<p>The concept of the <strong>Dockerfile</strong> is interesting:</p>
+<ul>
+<li>you start from an existing image</li>
+<li>you <em>declare</em> how to change it</li>
+<li>you get a new image</li>
+</ul>
+<pre class="dockerfile"><code>FROM debian:jessie
+RUN apt-get update \
+ &amp;&amp; apt-get install --no-install-recommends -y \
+    texlive-full</code></pre>
+</section>
+<section id="dockerfile-1" class="slide level1">
+<h1>Dockerfile</h1>
+<p>This is fine. But:</p>
+<ul>
+<li>you declare <strong>how</strong> to build an image<br>not <strong>what</strong> is the image you want to build</li>
+<li>this is too linear (cache)</li>
+<li>it's hard to compose</li>
+<li>...</li>
+</ul>
+<figure class="stretch">
+<img src="img/this-is-fine.jpg" alt="">
+</figure>
+</section>
+<section id="declarative-vs-imperative" class="slide level1">
+<h1>Declarative vs imperative</h1>
+<blockquote>
+<p><strong>Imperative programming</strong>: use statements that change a program's state</p>
+<p><strong>Declarative programming</strong>: express the logic of a computation without describing its control flow</p>
+</blockquote>
+<ul>
+<li>imperative: shopping instructions</li>
+<li>declarative: shopping list</li>
+</ul>
+</section>
+<section id="the-nixos-project" class="slide level1">
+<h1>The NixOS project</h1>
+<blockquote>
+<figure class="stretch">
+<img src="img/nixos.svg" alt="">
+</figure>
+<p><a href="https://nixos.org/" class="uri">https://nixos.org/</a></p>
+</blockquote>
+<ul>
+<li>Nix (package manager)</li>
+<li>Nix (language)</li>
+<li>NixOS (distribution)</li>
+<li>...</li>
+</ul>
 </section>
     </div>
   </div>

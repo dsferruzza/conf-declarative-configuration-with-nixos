@@ -53,7 +53,7 @@ GitLab CI is very flexible:
 ```yaml
 my_deploy:
   stage: deploy
-  image: org/mydockerimage
+  image: org/my_docker_image
   script:
     - echo "I can do anything here"
     - rsync ./my_projet $USER@$HOST:/var/www/
@@ -89,7 +89,7 @@ It works but:
 - security/system update can break stuff<br>=> you need to fix environments one by one
 - it's soooo **boring** to use
 
-> Boring means I will make errors
+> Boring means I will make mistakes
 
 
 # Naive solution
@@ -101,3 +101,54 @@ We did it for a while.
 <figure class="stretch"><img src="img/rain.gif" alt=""></figure>
 
 So, can we do better?
+
+
+# Dockerfile
+
+At that time, people were talking a lot about Docker. So I took a look.
+
+The concept of the **Dockerfile** is interesting:
+
+- you start from an existing image
+- you *declare* how to change it
+- you get a new image
+
+```dockerfile
+FROM debian:jessie
+RUN apt-get update \
+ && apt-get install --no-install-recommends -y \
+    texlive-full
+```
+
+
+# Dockerfile
+
+This is fine. But:
+
+- you declare **how** to build an image<br>not **what** is the image you want to build
+- this is too linear (cache)
+- it's hard to compose
+- ...
+
+<figure class="stretch"><img src="img/this-is-fine.jpg" alt=""></figure>
+
+
+# Declarative vs imperative
+
+> **Imperative programming**: use statements that change a program's state
+>
+> **Declarative programming**: express the logic of a computation without describing its control flow
+
+- imperative: shopping instructions
+- declarative: shopping list
+
+
+# The NixOS project
+
+> <figure class="stretch"><img src="img/nixos.svg" alt=""></figure>
+> <https://nixos.org/>
+
+- Nix (package manager)
+- Nix (language)
+- NixOS (distribution)
+- ...
