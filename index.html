@@ -40,7 +40,7 @@
 <li><a href="https://twitter.com/d_sferruzza">@d_sferruzza</a></li>
 <li><a href="https://github.com/dsferruzza">github.com/dsferruzza</a></li>
 <li>raptor trainer at <a href="http://www.startup-palace.com">Startup Palace</a> <em>!!! FIXME !!!</em></li>
-<li>PhD student in software engineering at <em>Université de Nantes</em></li>
+<li>PhD student in software engineering at <em>University of Nantes</em></li>
 </ul>
 <figure class="stretch">
 <img src="img/sp.gif" alt="">
@@ -115,8 +115,8 @@
 <p>It works but:</p>
 <ul>
 <li>it needs a lot of manual setup<br>=&gt; admins need to be watchful and rigorous</li>
-<li>environments can diverge<br>=&gt; it can become a mess</li>
-<li>security/system update can break stuff<br>=&gt; you need to fix environments one by one</li>
+<li>environments can diverge<br>=&gt; it can quickly become a mess</li>
+<li>security/system updates can break stuff<br>=&gt; you need to fix environments one by one</li>
 <li>it's soooo <strong>boring</strong> to use</li>
 </ul>
 <blockquote>
@@ -144,7 +144,7 @@
 <pre class="dockerfile"><code>FROM debian:jessie
 RUN apt-get update \
  &amp;&amp; apt-get install --no-install-recommends -y \
-    texlive-full</code></pre>
+    openjdk-7-jdk</code></pre>
 </section>
 <section id="dockerfile-1" class="slide level1">
 <h1>Dockerfile</h1>
@@ -179,11 +179,115 @@ RUN apt-get update \
 <p><a href="https://nixos.org/" class="uri">https://nixos.org/</a></p>
 </blockquote>
 <ul>
-<li>Nix (package manager)</li>
-<li>Nix (language)</li>
+<li>Nix</li>
+<li>Nix Expression Language</li>
 <li>NixOS (distribution)</li>
 <li>...</li>
 </ul>
+<aside class="notes">
+<p>Created by <em>Eelco Dolstra</em> for its PhD</p>
+</aside>
+</section>
+<section id="nix" class="slide level1">
+<h1>Nix</h1>
+<blockquote>
+<p>The Purely Functional Package Manager</p>
+<p><a href="https://nixos.org/nix/" class="uri">https://nixos.org/nix/</a></p>
+</blockquote>
+<p>Packages:</p>
+<ul>
+<li>are treated like values</li>
+<li>are built by functions that don't have side-effects</li>
+<li>never change after they have been built</li>
+</ul>
+<p>Builds are <strong>reproducible</strong>.</p>
+</section>
+<section id="nix-store" class="slide level1">
+<h1>Nix store</h1>
+<p>Where packages are stored. Usually in <code>/nix/store/</code></p>
+<p>Example:<br><small><code>/nix/store/f4gxsj6pn4ygqadwyk2m6xg1ywhfwxg1-openssl-1.0.2h/</code></small></p>
+<p>A package's directory name contains:</p>
+<ul>
+<li>it's name</li>
+<li>it's version</li>
+<li>a unique identifier that captures all its dependencies</li>
+</ul>
+<aside class="notes">
+<p>unique identifier = a cryptographic hash of the package’s build dependency graph</p>
+</aside>
+</section>
+<section id="nix-1" class="slide level1">
+<h1>Nix</h1>
+<p>Nice features:</p>
+<ul>
+<li>multiple versions</li>
+<li>complete (and explicit) dependencies</li>
+<li>multi-user</li>
+<li>atomic upgrades and rollbacks</li>
+<li>transparent source/binary deployment</li>
+</ul>
+<figure class="stretch">
+<img src="img/nice.gif" alt="">
+</figure>
+<aside class="notes">
+<p>build &amp; runtime dependencies</p>
+</aside>
+</section>
+<section id="nix-expression-language" class="slide level1">
+<h1>Nix Expression Language</h1>
+<blockquote>
+<p>It is a pure, lazy, functional language.</p>
+<p>It is <strong>not</strong> a general purpose language.</p>
+</blockquote>
+<p>Types of expressions:</p>
+<ul>
+<li>strings, integers, paths, booleans, null</li>
+<li>functions/lambdas</li>
+<li>lists</li>
+<li>sets</li>
+<li>derivations</li>
+</ul>
+</section>
+<section id="nix-expression-language-1" class="slide level1">
+<h1>Nix Expression Language</h1>
+<pre class="nix"><code># This is a list of strings
+[ &quot;a&quot; &quot;b&quot; &#39;&#39;c&#39;&#39; &quot;var=${var}&quot; ]
+
+# This is a lambda
+f = x: x * x
+
+# This is a set
+{ a = 5; b = f 2; }
+
+# This is a recursive set
+rec { a = b + 1; b = 5; }</code></pre>
+</section>
+<section id="the-which-package" class="slide level1">
+<h1>The <code>which</code> package</h1>
+<div class="smallcode">
+<pre class="nix"><code>{ stdenv, fetchurl }:
+
+stdenv.mkDerivation rec {
+  name = &quot;which-2.21&quot;;
+
+  src = fetchurl {
+    url = &quot;mirror://gnu/which/${name}.tar.gz&quot;;
+    sha256 = &quot;1bgafvy3ypbhhfznwjv1lxmd6mci3x1byilnnkc7gcr486wlb8pl&quot;;
+  };
+
+  meta = with stdenv.lib; {
+    homepage = http://ftp.gnu.org/gnu/which/;
+    platforms = platforms.all;
+    license = licenses.gpl3;
+  };
+}</code></pre>
+</div>
+</section>
+<section id="user-environments" class="slide level1">
+<h1>User environments</h1>
+<figure class="stretch">
+<img src="img/user-envs.png" alt="">
+</figure>
 </section>
     </div>
   </div>

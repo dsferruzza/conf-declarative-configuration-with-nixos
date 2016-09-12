@@ -8,7 +8,7 @@
 - [\@d_sferruzza](https://twitter.com/d\_sferruzza)
 - [github.com/dsferruzza](https://github.com/dsferruzza)
 - raptor trainer at [Startup Palace](http://www.startup-palace.com) *!!! FIXME !!!*
-- PhD student in software engineering at *Université de Nantes*
+- PhD student in software engineering at *University of Nantes*
 
 <figure class="stretch"><img src="img/sp.gif" alt=""></figure>
 
@@ -85,8 +85,8 @@ And let's install **and** *configure*:
 It works but:
 
 - it needs a lot of manual setup<br>=> admins need to be watchful and rigorous
-- environments can diverge<br>=> it can become a mess
-- security/system update can break stuff<br>=> you need to fix environments one by one
+- environments can diverge<br>=> it can quickly become a mess
+- security/system updates can break stuff<br>=> you need to fix environments one by one
 - it's soooo **boring** to use
 
 > Boring means I will make mistakes
@@ -117,7 +117,7 @@ The concept of the **Dockerfile** is interesting:
 FROM debian:jessie
 RUN apt-get update \
  && apt-get install --no-install-recommends -y \
-    texlive-full
+    openjdk-7-jdk
 ```
 
 
@@ -148,7 +148,119 @@ This is fine. But:
 > <figure class="stretch"><img src="img/nixos.svg" alt=""></figure>
 > <https://nixos.org/>
 
-- Nix (package manager)
-- Nix (language)
+- Nix
+- Nix Expression Language
 - NixOS (distribution)
 - ...
+
+<div class="notes">
+Created by *Eelco Dolstra* for its PhD
+</div>
+
+
+# Nix
+
+> The Purely Functional Package Manager
+>
+> <https://nixos.org/nix/>
+
+Packages:
+
+- are treated like values
+- are built by functions that don't have side-effects
+- never change after they have been built
+
+Builds are **reproducible**.
+
+
+# Nix store
+
+Where packages are stored. Usually in `/nix/store/`
+
+Example:<br><small>`/nix/store/f4gxsj6pn4ygqadwyk2m6xg1ywhfwxg1-openssl-1.0.2h/`</small>
+
+A package's directory name contains:
+
+- it's name
+- it's version
+- a unique identifier that captures all its dependencies
+
+<div class="notes">
+unique identifier = a cryptographic hash of the package’s build dependency graph
+</div>
+
+
+# Nix
+
+Nice features:
+
+- multiple versions
+- complete (and explicit) dependencies
+- multi-user
+- atomic upgrades and rollbacks
+- transparent source/binary deployment
+
+<figure class="stretch"><img src="img/nice.gif" alt=""></figure>
+
+<div class="notes">
+build & runtime dependencies
+</div>
+
+
+# Nix Expression Language
+
+> It is a pure, lazy, functional language.
+>
+> It is **not** a general purpose language.
+
+Types of expressions:
+
+- strings, integers, paths, booleans, null
+- functions/lambdas
+- lists
+- sets
+- derivations
+
+
+# Nix Expression Language
+
+```nix
+# This is a list of strings
+[ "a" "b" ''c'' "var=${var}" ]
+
+# This is a lambda
+f = x: x * x
+
+# This is a set
+{ a = 5; b = f 2; }
+
+# This is a recursive set
+rec { a = b + 1; b = 5; }
+```
+
+# The `which` package
+
+<div class="smallcode">
+```nix
+{ stdenv, fetchurl }:
+
+stdenv.mkDerivation rec {
+  name = "which-2.21";
+
+  src = fetchurl {
+    url = "mirror://gnu/which/${name}.tar.gz";
+    sha256 = "1bgafvy3ypbhhfznwjv1lxmd6mci3x1byilnnkc7gcr486wlb8pl";
+  };
+
+  meta = with stdenv.lib; {
+    homepage = http://ftp.gnu.org/gnu/which/;
+    platforms = platforms.all;
+    license = licenses.gpl3;
+  };
+}
+```
+</div>
+
+# User environments
+
+<figure class="stretch"><img src="img/user-envs.png" alt=""></figure>
