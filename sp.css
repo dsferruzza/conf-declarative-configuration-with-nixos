@@ -492,6 +492,10 @@ body {
     color: black;
     overflow: inherit; }
 
+.reveal .slides section .smallcode code {
+  font-size: 0.7em;
+  line-height: 1; }
+
 .reveal .slides section blockquote {
   box-shadow: 0px 0px 4px #2bb2d3; }
 
