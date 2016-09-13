@@ -7,7 +7,7 @@
 
 - [\@d_sferruzza](https://twitter.com/d\_sferruzza)
 - [github.com/dsferruzza](https://github.com/dsferruzza)
-- raptor trainer at [Startup Palace](http://www.startup-palace.com) *!!! FIXME !!!*
+- Head of Research at [Startup Palace](http://www.startup-palace.com)
 - PhD student in software engineering at *University of Nantes*
 
 <figure class="stretch"><img src="img/sp.gif" alt=""></figure>
@@ -17,7 +17,7 @@
 
 We **iteratively** design and develop web applications. <small>(among other things)</small>
 
-Frequent reviews by the customers (and by the team) are an important part of the job.
+Frequent reviews (by customers and team members) are an important part of the job.
 
 > We need staging/preprod environments
 
