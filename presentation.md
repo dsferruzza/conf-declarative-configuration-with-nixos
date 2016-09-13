@@ -468,17 +468,28 @@ Nice features:
 
 - multi-domain support (with redirections)
 - TLS support (automatic certification generation with [Let's Encrypt](https://letsencrypt.org/))
-- per-app user, with SSH access
+- per-app user, with SSH access (I can auto-deploy from GitLab \\o/)
 - per-app PHP version
 - per-app Cron jobs
 
 <figure class="stretch"><img src="img/combo.gif" alt=""></figure>
 
 
-
 # References
 
-- NixOS manual
-- Nix manual
-- Nixpkgs source code
-- Nix Pills
+- [NixOS manual](https://nixos.org/nixos/manual/)
+- [Nix manual](https://nixos.org/nix/manual/)
+- [Nixpkgs source code](https://github.com/NixOS/nixpkgs)
+- [Nix pills](https://lethalman.blogspot.fr/search/label/nixpills)
+- [Nix/NixOS papers](https://nixos.org/docs/papers.html)
+
+
+# Questions?
+
+<figure class="stretch"><img src="img/question.gif" alt=""></figure>
+
+Twitter: [\@d_sferruzza](https://twitter.com/d\_sferruzza)
+
+Slides on GitHub:
+
+[dsferruzza/conf-immutable-infrastructure-with-nixos](http://github.com/dsferruzza/conf-immutable-infrastructure-with-nixos)
