@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="author" content="David Sferruzza">
+  <meta name="dcterms.date" content="2016-12-09">
+  <title>How immutable infrastructure and declarative configuration removed the pain of managing my servers</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="lib/reveal.js/css/reveal.css">
+  <style type="text/css">code{white-space: pre;}</style>
+  <link rel="stylesheet" href="sp.css" id="theme">
+  <!-- Printing and PDF exports -->
+  <script>
+    var link = document.createElement( 'link' );
+    link.rel = 'stylesheet';
+    link.type = 'text/css';
+    link.href = window.location.search.match( /print-pdf/gi ) ? 'lib/reveal.js/css/print/pdf.css' : 'lib/reveal.js/css/print/paper.css';
+    document.getElementsByTagName( 'head' )[0].appendChild( link );
+  </script>
+  <!--[if lt IE 9]>
+  <script src="lib/reveal.js/lib/js/html5shiv.js"></script>
+  <![endif]-->
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section>
+  <h1 class="title">How immutable infrastructure and declarative configuration removed the pain of managing my servers</h1>
+  <h2 class="author">David Sferruzza</h2>
+  <h3 class="date">16/09/2016</h3>
+</section>
+
+<section id="about-me" class="slide level1">
+<h1>About me</h1>
+<ul>
+<li><a href="https://twitter.com/d_sferruzza">@d_sferruzza</a></li>
+<li><a href="https://github.com/dsferruzza">github.com/dsferruzza</a></li>
+<li>Head of Research at <a href="http://www.startup-palace.com">Startup Palace</a></li>
+<li>PhD student in software engineering at <em>University of Nantes</em></li>
+</ul>
+<figure class="stretch">
+<img src="img/sp.gif" alt="">
+</figure>
+</section>
+<section id="startup-palace" class="slide level1">
+<h1>Startup Palace</h1>
+<p>We <strong>iteratively</strong> design and develop web applications. <small>(among other things)</small></p>
+<p>Frequent reviews (by customers and team members) are an important part of the job.</p>
+<blockquote>
+<p>We need staging/preprod environments</p>
+</blockquote>
+<figure class="stretch">
+<img src="img/crash.gif" alt="">
+</figure>
+</section>
+<section id="staging-environments" class="slide level1">
+<h1>Staging environments</h1>
+<p>They should be:</p>
+<ul>
+<li>quick to create</li>
+<li>quick to configure</li>
+<li>quick to remove</li>
+<li>cheap</li>
+<li>compatible with automatic deployment</li>
+</ul>
+<figure class="stretch">
+<img src="img/cups.gif" alt="">
+</figure>
+</section>
+<section id="about-automatic-deployment" class="slide level1">
+<h1>About automatic deployment</h1>
+<p>We use <a href="https://about.gitlab.com/">GitLab</a></p>
+<figure class="stretch">
+<img src="img/gitlab.svg" alt="">
+</figure>
+<blockquote>
+<p>GitLab unifies chat, issues, code review, CI and CD into a single UI</p>
+</blockquote>
+</section>
+<section id="about-automatic-deployment-1" class="slide level1">
+<h1>About automatic deployment</h1>
+<p>GitLab CI is very flexible:</p>
+<pre class="yaml"><code>my_deploy:
+  stage: deploy
+  image: org/my_docker_image
+  script:
+    - echo &quot;I can do anything here&quot;
+    - rsync ./my_projet $USER@$HOST:/var/www/
+  only:
+    - master
+  tags:
+    - docker</code></pre>
+</section>
+<section id="naive-solution" class="slide level1">
+<h1>Naive solution</h1>
+<p>We know <a href="https://www.debian.org/">Debian</a>. Let's use Debian!</p>
+<p>And let's install <strong>and</strong> <em>configure</em>:</p>
+<ul>
+<li>Apache</li>
+<li>PHP</li>
+<li>PostgreSQL</li>
+<li>SSH</li>
+</ul>
+<p><em>by hand</em>!</p>
+<figure class="stretch">
+<img src="img/madness.gif" alt="">
+</figure>
+</section>
+<section id="naive-solution-1" class="slide level1">
+<h1>Naive solution</h1>
+<p>It works but:</p>
+<ul>
+<li>it needs a lot of manual setup<br>=&gt; admins need to be watchful and rigorous</li>
+<li>environments can diverge<br>=&gt; it can quickly become a mess</li>
+<li>security/system updates can break stuff<br>=&gt; you need to fix environments one by one</li>
+<li>it's soooo <strong>boring</strong> to use</li>
+</ul>
+<blockquote>
+<p>Boring means I will make mistakes</p>
+</blockquote>
+</section>
+<section id="naive-solution-2" class="slide level1">
+<h1>Naive solution</h1>
+<p>We did it for a while.</p>
+<p><em>1 star. Would not recommend.</em></p>
+<figure class="stretch">
+<img src="img/rain.gif" alt="">
+</figure>
+<p>So, can we do better?</p>
+</section>
+<section id="dockerfile" class="slide level1">
+<h1>Dockerfile</h1>
+<p>At that time, people were talking a lot about Docker. So I took a look.</p>
+<p>The concept of the <strong>Dockerfile</strong> is interesting:</p>
+<ul>
+<li>you start from an existing image</li>
+<li>you <em>declare</em> how to change it</li>
+<li>you get a new image</li>
+</ul>
+<pre class="dockerfile"><code>FROM debian:jessie
+RUN apt-get update \
+ &amp;&amp; apt-get install --no-install-recommends -y \
+    openjdk-7-jdk</code></pre>
+</section>
+<section id="dockerfile-1" class="slide level1">
+<h1>Dockerfile</h1>
+<p>This is fine. But:</p>
+<ul>
+<li>you declare <strong>how</strong> to build an image<br>not <strong>what</strong> is the image you want to build</li>
+<li>this is too linear (cache)</li>
+<li>it's hard to compose</li>
+<li>...</li>
+</ul>
+<figure class="stretch">
+<img src="img/this-is-fine.jpg" alt="">
+</figure>
+</section>
+<section id="declarative-vs-imperative" class="slide level1">
+<h1>Declarative vs imperative</h1>
+<blockquote>
+<p><strong>Imperative programming</strong>: use statements that change a program's state</p>
+<p><strong>Declarative programming</strong>: express the logic of a computation without describing its control flow</p>
+</blockquote>
+<ul>
+<li>imperative: shopping instructions</li>
+<li>declarative: shopping list</li>
+</ul>
+</section>
+<section id="the-nixos-project" class="slide level1">
+<h1>The NixOS project</h1>
+<blockquote>
+<figure class="stretch">
+<img src="img/nixos.svg" alt="">
+</figure>
+<p><a href="https://nixos.org/" class="uri">https://nixos.org/</a></p>
+</blockquote>
+<ul>
+<li>Nix</li>
+<li>Nix Expression Language</li>
+<li>Nixpkgs</li>
+<li>NixOS (distribution)</li>
+<li>...</li>
+</ul>
+<aside class="notes">
+<p>Created by <em>Eelco Dolstra</em> for its PhD</p>
+</aside>
+</section>
+<section id="nix" class="slide level1">
+<h1>Nix</h1>
+<blockquote>
+<p>The Purely Functional Package Manager</p>
+<p><a href="https://nixos.org/nix/" class="uri">https://nixos.org/nix/</a></p>
+</blockquote>
+<p>Packages:</p>
+<ul>
+<li>are treated like values</li>
+<li>are built by functions that don't have side-effects</li>
+<li>never change after they have been built</li>
+</ul>
+<p>Builds are <strong>reproducible</strong>.</p>
+</section>
+<section id="nix-store" class="slide level1">
+<h1>Nix store</h1>
+<p>Where packages are stored. Usually in <code>/nix/store/</code></p>
+<p>Example:<br><small><code>/nix/store/f4gxsj6pn4ygqadwyk2m6xg1ywhfwxg1-openssl-1.0.2h/</code></small></p>
+<p>A package's directory name contains:</p>
+<ul>
+<li>it's name</li>
+<li>it's version</li>
+<li>a unique identifier that captures all its dependencies</li>
+</ul>
+<aside class="notes">
+<p>unique identifier = a cryptographic hash of the package’s build dependency graph</p>
+</aside>
+</section>
+<section id="nix-1" class="slide level1">
+<h1>Nix</h1>
+<p>Nice features:</p>
+<ul>
+<li>multiple versions</li>
+<li>complete (and explicit) dependencies</li>
+<li>multi-user</li>
+<li>atomic upgrades and rollbacks</li>
+<li>transparent source/binary deployment</li>
+</ul>
+<figure class="stretch">
+<img src="img/nice.gif" alt="">
+</figure>
+<aside class="notes">
+<p>build &amp; runtime dependencies</p>
+</aside>
+</section>
+<section id="nix-expression-language" class="slide level1">
+<h1>Nix Expression Language</h1>
+<blockquote>
+<p>It is a pure, lazy, functional language.</p>
+<p>It is <strong>not</strong> a general purpose language.</p>
+</blockquote>
+<p>Types of expressions:</p>
+<ul>
+<li>strings, integers, paths, booleans, null</li>
+<li>functions/lambdas</li>
+<li>lists</li>
+<li>sets</li>
+<li>derivations (package build actions)</li>
+</ul>
+</section>
+<section id="nix-expression-language-1" class="slide level1">
+<h1>Nix Expression Language</h1>
+<pre class="nix"><code># This is a list of strings
+[ &quot;a&quot; &quot;b&quot; &#39;&#39;c&#39;&#39; &quot;var=${var}&quot; ]
+
+# This is a lambda
+f = x: x * x
+
+# This is a set
+{ a = 5; b = f 2; }
+
+# This is a recursive set
+rec { a = b + 1; b = 5; }</code></pre>
+</section>
+<section id="the-which-package" class="slide level1">
+<h1>The <code>which</code> package</h1>
+<div class="smallcode">
+<pre class="nix"><code>{ stdenv, fetchurl }:
+
+stdenv.mkDerivation rec {
+  name = &quot;which-2.21&quot;;
+
+  src = fetchurl {
+    url = &quot;mirror://gnu/which/${name}.tar.gz&quot;;
+    sha256 = &quot;1bgafvy3ypbhhfznwjv1lxmd6mci3x1byilnnkc7gcr486wlb8pl&quot;;
+  };
+
+  meta = with stdenv.lib; {
+    homepage = http://ftp.gnu.org/gnu/which/;
+    platforms = platforms.all;
+    license = licenses.gpl3;
+  };
+}</code></pre>
+<pre><code>result/
+├── bin
+│   └── which
+└── share
+    ├── info
+    │   └── which.info
+    └── man
+        └── man1
+            └── which.1.gz</code></pre>
+</div>
+</section>
+<section id="user-environments" class="slide level1">
+<h1>User environments</h1>
+<figure class="stretch">
+<img src="img/user-envs.png" alt="">
+</figure>
+</section>
+<section id="nixpkgs" class="slide level1">
+<h1>Nixpkgs</h1>
+<blockquote>
+<p>A collection of packages for the Nix package manager.</p>
+<p><a href="https://github.com/NixOS/nixpkgs" class="uri">https://github.com/NixOS/nixpkgs</a></p>
+</blockquote>
+<ul>
+<li>has nearly 6,500 packages</li>
+<li>uses a permissive MIT/X11 license</li>
+<li>includes a <a href="https://github.com/NixOS/nixpkgs/tree/master/lib">standard library</a> for Nix Expression Language</li>
+<li>supports GNU/Linux (<code>i686-linux</code> and <code>x86_64-linux</code>) and Mac OS X (<code>x86_64-darwin</code>)</li>
+</ul>
+</section>
+<section id="nixos" class="slide level1">
+<h1>NixOS</h1>
+<p>The Purely Functional Linux Distribution</p>
+<blockquote>
+<p>Nix + Nixpkgs + systemd + Linux kernel</p>
+</blockquote>
+<ul>
+<li>declarative system configuration model</li>
+<li>reliable upgrades</li>
+<li>atomic upgrades</li>
+<li>rollbacks</li>
+<li>reproducible system configurations</li>
+<li>safe to test changes</li>
+<li>Nix goodness (multi-user package management, source-based model with binaries, consistency, ...)</li>
+</ul>
+</section>
+<section id="nixos-1" class="slide level1">
+<h1>NixOS</h1>
+<div class="smallcode">
+<pre class="nix"><code>{ config, lib, pkgs, ... }:
+{
+  boot.loader.grub.device = &quot;/dev/sda&quot;;
+  fileSystems.&quot;/&quot;.device = &quot;/dev/sda1&quot;;
+
+  networking.firewall = {
+    enable = true;
+    allowedTCPPorts = [ 80 ];
+  };
+
+  environment.systemPackages = with pkgs; [
+    wget
+    git
+  ];
+
+  services = {
+    sshd.enable = true;
+    munin-node.enable = true;
+    munin-cron = {
+      enable = true;
+      hosts = &#39;&#39;
+        [${config.networking.hostName}]
+        address localhost
+      &#39;&#39;;
+    };
+  };
+}</code></pre>
+</div>
+</section>
+<section id="nixos-2" class="slide level1">
+<h1>NixOS</h1>
+<p>Build your own system config using:</p>
+<ul>
+<li>the <code>/etc/nixos/configuration.nix</code> file</li>
+<li>a functional programming language</li>
+<li>a module system</li>
+<li>packages and generic functions from Nixpkgs</li>
+</ul>
+<figure class="stretch">
+<img src="img/lego.gif" alt="">
+</figure>
+</section>
+<section id="options" class="slide level1">
+<h1>Options</h1>
+<blockquote>
+<p>A NixOS module can:</p>
+<ul>
+<li>declare options</li>
+<li>define options depending on other options' values</li>
+</ul>
+</blockquote>
+<p><strong>Example</strong>: I want a boolean option <code>myCustomBashAliases</code> that define some Bash aliases when enabled.</p>
+<p>Built-in options: <a href="https://nixos.org/nixos/options.html" class="uri">https://nixos.org/nixos/options.html</a></p>
+</section>
+<section id="options-1" class="slide level1">
+<h1>Options</h1>
+<p>In <code>/etc/nixos/myModule.nix</code>:</p>
+<div class="smallcode">
+<pre class="nix"><code>{ config, lib, pkgs, ... }:
+
+{
+  options = {
+    myCustomBashAliases = lib.mkOption {
+      default = false;
+      description = &quot;Enable my awesome Bash aliases.&quot;;
+      types = lib.types.bool;
+    };
+  };
+
+  config = lib.mkIf config.myCustomBashAliases {
+    programs.bash.shellAliases = {
+      ls = &quot;ls --color=auto&quot;;
+      ll = &quot;ls --color=auto -lh&quot;;
+      l = &quot;ls --color=auto -lha&quot;;
+    };
+  };
+}</code></pre>
+</div>
+</section>
+<section id="option-usage" class="slide level1">
+<h1>Option usage</h1>
+<p>In <code>/etc/nixos/configuration.nix</code>:</p>
+<div class="smallcode">
+<pre class="nix"><code>{ config, pkgs, ... }:
+
+{
+  imports =
+    [
+      # ...
+      ./myModule.nix
+    ];
+
+  myCustomBashAliases = true;
+
+  # ...
+}</code></pre>
+</div>
+<p>This allows to build very powerful abstractions!</p>
+</section>
+<section id="back-to-the-problem" class="slide level1">
+<h1>Back to the problem</h1>
+<p>I want to be able to create staging environments</p>
+<ul>
+<li>quickly</li>
+<li>easily</li>
+<li>in a reliable way</li>
+</ul>
+<p>=&gt; Let's write some NixOS modules!</p>
+<figure class="stretch">
+<img src="img/lets-do-this.gif" alt="">
+</figure>
+</section>
+<section id="knights-of-nix" class="slide level1">
+<h1>Knights Of Nix</h1>
+<p>An abstraction over NixOS to manage staging environments for static and PHP web apps.</p>
+<figure class="stretch">
+<img src="img/ni.gif" alt="">
+</figure>
+<p>Disclaimers:</p>
+<ul>
+<li>This is a <strong>Proof of Concept</strong></li>
+<li>This is <strong>not</strong> a <em>Platform as a Service</em> (PaaS)</li>
+</ul>
+</section>
+<section id="knights-of-nix-1" class="slide level1">
+<h1>Knights Of Nix</h1>
+<p>High-level definition of staging environments:</p>
+<pre class="nix"><code>[
+  # Here is a fake app
+  rec {
+    appType = &quot;php&quot;;
+    phpVersion = &quot;70&quot;;
+    name = &quot;test&quot;;
+    hostName = &quot;${name}.mydomain.com&quot;;
+    userSha512Password = &quot;...&quot;;
+    pgClearPassword = &quot;...&quot;;
+  }
+]</code></pre>
+</section>
+<section id="knights-of-nix-2" class="slide level1">
+<h1>Knights Of Nix</h1>
+<p>Nice features:</p>
+<ul>
+<li>multi-domain support (with redirections)</li>
+<li>TLS support (automatic certification generation with <a href="https://letsencrypt.org/">Let's Encrypt</a>)</li>
+<li>per-app user, with SSH access (I can auto-deploy from GitLab \o/)</li>
+<li>per-app PHP version</li>
+<li>per-app Cron jobs</li>
+</ul>
+<figure class="stretch">
+<img src="img/combo.gif" alt="">
+</figure>
+</section>
+<section id="references" class="slide level1">
+<h1>References</h1>
+<ul>
+<li><a href="https://nixos.org/nixos/manual/">NixOS manual</a></li>
+<li><a href="https://nixos.org/nix/manual/">Nix manual</a></li>
+<li><a href="https://github.com/NixOS/nixpkgs">Nixpkgs source code</a></li>
+<li><a href="https://lethalman.blogspot.fr/search/label/nixpills">Nix pills</a></li>
+<li><a href="https://nixos.org/docs/papers.html">Nix/NixOS papers</a></li>
+</ul>
+</section>
+<section id="questions" class="slide level1">
+<h1>Questions?</h1>
+<figure class="stretch">
+<img src="img/question.gif" alt="">
+</figure>
+<p>Twitter: <a href="https://twitter.com/d_sferruzza">@d_sferruzza</a></p>
+<p>Slides on GitHub:</p>
+<p><a href="http://github.com/dsferruzza/conf-immutable-infrastructure-with-nixos">dsferruzza/conf-immutable-infrastructure-with-nixos</a></p>
+<aside class="notes">
+<h1 id="nix-pros">nix pros</h1>
+<ul>
+<li>nix-shell</li>
+<li>customization (upstream/override)</li>
+<li>rollback</li>
+<li>upgrade = atomic</li>
+<li>don't look at the old state / no feedback loop</li>
+<li>sharing mechanism</li>
+<li>programming a package</li>
+<li>can package closed-source programs</li>
+</ul>
+<p>Sander's talk 27:32</p>
+<h1 id="other-tools">other tools</h1>
+<ul>
+<li>Chef</li>
+<li>Puppet</li>
+<li>CFEngine</li>
+</ul>
+<p>initial state unknown (?) =&gt; spec is not complete</p>
+</aside>
+</section>
+    </div>
+  </div>
+
+  <script src="lib/reveal.js/lib/js/head.min.js"></script>
+  <script src="lib/reveal.js/js/reveal.js"></script>
+
+  <script>
+      // Dirty hack to remove slide IDs (because french accents break URLs)
+      var slides = document.querySelectorAll('.slides > section');
+      for (var i = 0; i < slides.length; ++i) {
+        slides[i].removeAttribute('id');
+      }
+
+      // Full list of configuration options available at:
+      // https://github.com/hakimel/reveal.js#configuration
+      Reveal.initialize({
+        // Display the page number of the current slide
+        slideNumber: true,
+        // Push each slide change to the browser history
+        history: true,
+        // Vertical centering of slides
+        center: false,
+        // Transition style
+        transition: 'none', // none/fade/slide/convex/concave/zoom
+
+        // Optional reveal.js plugins
+        dependencies: [
+          { src: 'lib/reveal.js/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+          { src: 'lib/reveal.js/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+          { src: 'lib/reveal.js/plugin/zoom-js/zoom.js', async: true },
+          { src: 'lib/reveal.js/plugin/notes/notes.js', async: true }
+        ]
+      });
+    </script>
+    </body>
+</html>
