@@ -181,6 +181,7 @@ RUN apt-get update \
 <ul>
 <li>Nix</li>
 <li>Nix Expression Language</li>
+<li>Nixpkgs</li>
 <li>NixOS (distribution)</li>
 <li>...</li>
 </ul>
@@ -245,7 +246,7 @@ RUN apt-get update \
 <li>functions/lambdas</li>
 <li>lists</li>
 <li>sets</li>
-<li>derivations</li>
+<li>derivations (package build actions)</li>
 </ul>
 </section>
 <section id="nix-expression-language-1" class="slide level1">
@@ -281,6 +282,15 @@ stdenv.mkDerivation rec {
     license = licenses.gpl3;
   };
 }</code></pre>
+<pre><code>result/
+├── bin
+│   └── which
+└── share
+    ├── info
+    │   └── which.info
+    └── man
+        └── man1
+            └── which.1.gz</code></pre>
 </div>
 </section>
 <section id="user-environments" class="slide level1">
@@ -288,6 +298,200 @@ stdenv.mkDerivation rec {
 <figure class="stretch">
 <img src="img/user-envs.png" alt="">
 </figure>
+</section>
+<section id="nixpkgs" class="slide level1">
+<h1>Nixpkgs</h1>
+<blockquote>
+<p>A collection of packages for the Nix package manager.</p>
+<p><a href="https://github.com/NixOS/nixpkgs" class="uri">https://github.com/NixOS/nixpkgs</a></p>
+</blockquote>
+<ul>
+<li>has nearly 6,500 packages</li>
+<li>uses a permissive MIT/X11 license</li>
+<li>includes a <a href="https://github.com/NixOS/nixpkgs/tree/master/lib">standard library</a> for Nix Expression Language</li>
+<li>supports GNU/Linux (<code>i686-linux</code> and <code>x86_64-linux</code>) and Mac OS X (<code>x86_64-darwin</code>)</li>
+</ul>
+</section>
+<section id="nixos" class="slide level1">
+<h1>NixOS</h1>
+<p>The Purely Functional Linux Distribution</p>
+<blockquote>
+<p>Nix + Nixpkgs + systemd + Linux kernel</p>
+</blockquote>
+<ul>
+<li>declarative system configuration model</li>
+<li>reliable upgrades</li>
+<li>atomic upgrades</li>
+<li>rollbacks</li>
+<li>reproducible system configurations</li>
+<li>safe to test changes</li>
+<li>Nix goodness (multi-user package management, source-based model with binaries, consistency, ...)</li>
+</ul>
+</section>
+<section id="nixos-1" class="slide level1">
+<h1>NixOS</h1>
+<div class="smallcode">
+<pre class="nix"><code>{ config, lib, pkgs, ... }:
+{
+  boot.loader.grub.device = &quot;/dev/sda&quot;;
+  fileSystems.&quot;/&quot;.device = &quot;/dev/sda1&quot;;
+
+  networking.firewall = {
+    enable = true;
+    allowedTCPPorts = [ 80 ];
+  };
+
+  environment.systemPackages = with pkgs; [
+    wget
+    git
+  ];
+
+  services = {
+    sshd.enable = true;
+    munin-node.enable = true;
+    munin-cron = {
+      enable = true;
+      hosts = &#39;&#39;
+        [${config.networking.hostName}]
+        address localhost
+      &#39;&#39;;
+    };
+  };
+}</code></pre>
+</div>
+</section>
+<section id="nixos-2" class="slide level1">
+<h1>NixOS</h1>
+<p>Build your own system config using:</p>
+<ul>
+<li>the <code>/etc/nixos/configuration.nix</code> file</li>
+<li>a functional programming language</li>
+<li>a module system</li>
+<li>packages and generic functions from Nixpkgs</li>
+</ul>
+<figure class="stretch">
+<img src="img/lego.gif" alt="">
+</figure>
+</section>
+<section id="options" class="slide level1">
+<h1>Options</h1>
+<blockquote>
+<p>A NixOS module can:</p>
+<ul>
+<li>declare options</li>
+<li>define options depending on other options' values</li>
+</ul>
+</blockquote>
+<p><strong>Example</strong>: I want a boolean option <code>myCustomBashAliases</code> that define some Bash aliases when enabled.</p>
+<p>Built-in options: <a href="https://nixos.org/nixos/options.html" class="uri">https://nixos.org/nixos/options.html</a></p>
+</section>
+<section id="options-1" class="slide level1">
+<h1>Options</h1>
+<p>In <code>/etc/nixos/myModule.nix</code>:</p>
+<div class="smallcode">
+<pre class="nix"><code>{ config, lib, pkgs, ... }:
+
+{
+  options = {
+    myCustomBashAliases = lib.mkOption {
+      default = false;
+      description = &quot;Enable my awesome Bash aliases.&quot;;
+      types = lib.types.bool;
+    };
+  };
+
+  config = lib.mkIf config.myCustomBashAliases {
+    programs.bash.shellAliases = {
+      ls = &quot;ls --color=auto&quot;;
+      ll = &quot;ls --color=auto -lh&quot;;
+      l = &quot;ls --color=auto -lha&quot;;
+    };
+  };
+}</code></pre>
+</div>
+</section>
+<section id="option-usage" class="slide level1">
+<h1>Option usage</h1>
+<p>In <code>/etc/nixos/configuration.nix</code>:</p>
+<div class="smallcode">
+<pre class="nix"><code>{ config, pkgs, ... }:
+
+{
+  imports =
+    [
+      # ...
+      ./myModule.nix
+    ];
+
+  myCustomBashAliases = true;
+
+  # ...
+}</code></pre>
+</div>
+<p>This allows to build very powerful abstractions!</p>
+</section>
+<section id="back-to-the-problem" class="slide level1">
+<h1>Back to the problem</h1>
+<p>I want to be able to create staging environments</p>
+<ul>
+<li>quickly</li>
+<li>easily</li>
+<li>in a reliable way</li>
+</ul>
+<p>=&gt; Let's write some NixOS modules!</p>
+<figure class="stretch">
+<img src="img/lets-do-this.gif" alt="">
+</figure>
+</section>
+<section id="knights-of-nix" class="slide level1">
+<h1>Knights Of Nix</h1>
+<p>An abstraction over NixOS to manage staging environments for static and PHP web apps.</p>
+<figure class="stretch">
+<img src="img/ni.gif" alt="">
+</figure>
+<p>Disclaimers:</p>
+<ul>
+<li>This is a <strong>Proof of Concept</strong></li>
+<li>This is <strong>not</strong> a <em>Platform as a Service</em> (PaaS)</li>
+</ul>
+</section>
+<section id="knights-of-nix-1" class="slide level1">
+<h1>Knights Of Nix</h1>
+<p>High-level definition of staging environments:</p>
+<pre class="nix"><code>[
+  # Here is a fake app
+  rec {
+    appType = &quot;php&quot;;
+    phpVersion = &quot;70&quot;;
+    name = &quot;test&quot;;
+    hostName = &quot;${name}.mydomain.com&quot;;
+    userSha512Password = &quot;...&quot;;
+    pgClearPassword = &quot;...&quot;;
+  }
+]</code></pre>
+</section>
+<section id="knights-of-nix-2" class="slide level1">
+<h1>Knights Of Nix</h1>
+<p>Nice features:</p>
+<ul>
+<li>multi-domain support (with redirections)</li>
+<li>TLS support (automatic certification generation with <a href="https://letsencrypt.org/">Let's Encrypt</a>)</li>
+<li>per-app user, with SSH access</li>
+<li>per-app PHP version</li>
+<li>per-app Cron jobs</li>
+</ul>
+<figure class="stretch">
+<img src="img/combo.gif" alt="">
+</figure>
+</section>
+<section id="references" class="slide level1">
+<h1>References</h1>
+<ul>
+<li>NixOS manual</li>
+<li>Nix manual</li>
+<li>Nixpkgs source code</li>
+<li>Nix Pills</li>
+</ul>
 </section>
     </div>
   </div>

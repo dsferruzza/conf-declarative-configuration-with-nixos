@@ -150,6 +150,7 @@ This is fine. But:
 
 - Nix
 - Nix Expression Language
+- Nixpkgs
 - NixOS (distribution)
 - ...
 
@@ -219,7 +220,7 @@ Types of expressions:
 - functions/lambdas
 - lists
 - sets
-- derivations
+- derivations (package build actions)
 
 
 # Nix Expression Language
@@ -259,8 +260,225 @@ stdenv.mkDerivation rec {
   };
 }
 ```
+```
+result/
+├── bin
+│   └── which
+└── share
+    ├── info
+    │   └── which.info
+    └── man
+        └── man1
+            └── which.1.gz
+```
 </div>
 
 # User environments
 
 <figure class="stretch"><img src="img/user-envs.png" alt=""></figure>
+
+
+# Nixpkgs
+
+> A collection of packages for the Nix package manager.
+>
+> <https://github.com/NixOS/nixpkgs>
+
+- has nearly 6,500 packages
+- uses a permissive MIT/X11 license
+- includes a [standard library](https://github.com/NixOS/nixpkgs/tree/master/lib) for Nix Expression Language
+- supports GNU/Linux (`i686-linux` and `x86_64-linux`) and Mac OS X (`x86_64-darwin`)
+
+
+# NixOS
+
+The Purely Functional Linux Distribution
+
+> Nix + Nixpkgs + systemd + Linux kernel
+
+- declarative system configuration model
+- reliable upgrades
+- atomic upgrades
+- rollbacks
+- reproducible system configurations
+- safe to test changes
+- Nix goodness (multi-user package management, source-based model with binaries, consistency, ...)
+
+
+# NixOS
+
+<div class="smallcode">
+```nix
+{ config, lib, pkgs, ... }:
+{
+  boot.loader.grub.device = "/dev/sda";
+  fileSystems."/".device = "/dev/sda1";
+
+  networking.firewall = {
+    enable = true;
+    allowedTCPPorts = [ 80 ];
+  };
+
+  environment.systemPackages = with pkgs; [
+    wget
+    git
+  ];
+
+  services = {
+    sshd.enable = true;
+    munin-node.enable = true;
+    munin-cron = {
+      enable = true;
+      hosts = ''
+        [${config.networking.hostName}]
+        address localhost
+      '';
+    };
+  };
+}
+```
+</div>
+
+
+# NixOS
+
+Build your own system config using:
+
+- the `/etc/nixos/configuration.nix` file
+- a functional programming language
+- a module system
+- packages and generic functions from Nixpkgs
+
+<figure class="stretch"><img src="img/lego.gif" alt=""></figure>
+
+
+# Options
+
+> A NixOS module can:
+>
+> - declare options
+> - define options depending on other options' values
+
+**Example**: I want a boolean option `myCustomBashAliases` that define some Bash aliases when enabled.
+
+Built-in options: <https://nixos.org/nixos/options.html>
+
+
+# Options
+
+In `/etc/nixos/myModule.nix`:
+
+<div class="smallcode">
+```nix
+{ config, lib, pkgs, ... }:
+
+{
+  options = {
+    myCustomBashAliases = lib.mkOption {
+      default = false;
+      description = "Enable my awesome Bash aliases.";
+      types = lib.types.bool;
+    };
+  };
+
+  config = lib.mkIf config.myCustomBashAliases {
+    programs.bash.shellAliases = {
+      ls = "ls --color=auto";
+      ll = "ls --color=auto -lh";
+      l = "ls --color=auto -lha";
+    };
+  };
+}
+```
+</div>
+
+
+# Option usage
+
+In `/etc/nixos/configuration.nix`:
+
+<div class="smallcode">
+```nix
+{ config, pkgs, ... }:
+
+{
+  imports =
+    [
+      # ...
+      ./myModule.nix
+    ];
+
+  myCustomBashAliases = true;
+
+  # ...
+}
+```
+</div>
+
+This allows to build very powerful abstractions!
+
+
+# Back to the problem
+
+I want to be able to create staging environments
+
+- quickly
+- easily
+- in a reliable way
+
+=> Let's write some NixOS modules!
+
+<figure class="stretch"><img src="img/lets-do-this.gif" alt=""></figure>
+
+
+# Knights Of Nix
+
+An abstraction over NixOS to manage staging environments for static and PHP web apps.
+
+<figure class="stretch"><img src="img/ni.gif" alt=""></figure>
+
+Disclaimers:
+
+- This is a **Proof of Concept**
+- This is **not** a *Platform as a Service* (PaaS)
+
+
+# Knights Of Nix
+
+High-level definition of staging environments:
+
+```nix
+[
+  # Here is a fake app
+  rec {
+    appType = "php";
+    phpVersion = "70";
+    name = "test";
+    hostName = "${name}.mydomain.com";
+    userSha512Password = "...";
+    pgClearPassword = "...";
+  }
+]
+```
+
+
+# Knights Of Nix
+
+Nice features:
+
+- multi-domain support (with redirections)
+- TLS support (automatic certification generation with [Let's Encrypt](https://letsencrypt.org/))
+- per-app user, with SSH access
+- per-app PHP version
+- per-app Cron jobs
+
+<figure class="stretch"><img src="img/combo.gif" alt=""></figure>
+
+
+
+# References
+
+- NixOS manual
+- Nix manual
+- Nixpkgs source code
+- Nix Pills
