@@ -564,6 +564,30 @@ Nice features:
 <figure class="stretch"><img src="img/combo.gif" alt=""></figure>
 
 
+# Bonus: nix-shell
+
+<div class="smallcode">
+```nix
+nixpkgs.config.packageOverrides = pkgs: rec {
+  simp_le = pkgs.simp_le.overrideDerivation (oldAttrs: {
+    patches = [
+      (pkgs.fetchpatch {
+        url = "https://github.com/kuba/simp_le/commit/" +
+              "4bc788fdd611c4118c3f86b5f546779723aca5a7.patch";
+        sha256 = "0036p11qn3plydv5s5z6i28r6ihy1ipjl0y8la0izpkiq273byfc";
+      })
+    ];
+  });
+};
+```
+</div>
+
+
+# Bonus: customization
+
+
+
+
 # References
 
 - [NixOS manual](https://nixos.org/nixos/manual/)
