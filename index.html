@@ -154,7 +154,7 @@ RUN apt-get update \
 <p>This is fine. But:</p>
 <ul>
 <li>you declare <strong>how</strong> to build an image<br>not <strong>what</strong> is the image you want to build</li>
-<li>this is too linear (cache)</li>
+<li>this is too linear (layers of cache)</li>
 <li>it's hard to compose</li>
 <li>...</li>
 </ul>
@@ -185,7 +185,7 @@ RUN apt-get update \
 <li>Nix</li>
 <li>Nix Expression Language</li>
 <li>Nixpkgs</li>
-<li>NixOS (distribution)</li>
+<li>NixOS (Linux distribution)</li>
 <li>...</li>
 </ul>
 <aside class="notes">
@@ -208,7 +208,7 @@ RUN apt-get update \
 </section>
 <section id="nix-store" class="slide level1">
 <h1>Nix store</h1>
-<p>Where packages are stored. Usually in <code>/nix/store/</code></p>
+<p>The place where packages are stored. Usually in <code>/nix/store/</code></p>
 <p>Example:<br><small><code>/nix/store/f4gxsj6pn4ygqadwyk2m6xg1ywhfwxg1-openssl-1.0.2h/</code></small></p>
 <p>A package's directory name contains:</p>
 <ul>
@@ -218,6 +218,70 @@ RUN apt-get update \
 </ul>
 <aside class="notes">
 <p>unique identifier = a cryptographic hash of the package’s build dependency graph</p>
+</aside>
+</section>
+<section id="user-environments" class="slide level1">
+<h1>User environments</h1>
+<figure class="stretch">
+<img src="img/user-envs.png" alt="">
+</figure>
+</section>
+<section id="the-which-package" class="slide level1">
+<h1>The <code>which</code> package</h1>
+<div class="smallcode">
+<pre class="nix"><code>{ stdenv, fetchurl }:
+
+stdenv.mkDerivation rec {
+  name = &quot;which-2.21&quot;;
+
+  src = fetchurl {
+    url = &quot;mirror://gnu/which/${name}.tar.gz&quot;;
+    sha256 = &quot;1bgafvy3ypbhhfznwjv1lxmd6mci3x1byilnnkc7gcr486wlb8pl&quot;;
+  };
+
+  meta = with stdenv.lib; {
+    homepage = http://ftp.gnu.org/gnu/which/;
+    platforms = platforms.all;
+    license = licenses.gpl3;
+  };
+}</code></pre>
+<pre class="text"><code>result/
+├── bin
+│   └── which
+└── share
+    ├── info
+    │   └── which.info
+    └── man
+        └── man1
+            └── which.1.gz</code></pre>
+</div>
+</section>
+<section id="the-which-package-1" class="slide level1">
+<h1>The <code>which</code> package</h1>
+<div class="smallcode">
+<pre class="nix"><code>{ stdenv, fetchurl }:
+
+stdenv.mkDerivation rec {
+  name = &quot;which-2.21&quot;;
+
+  src = fetchurl {
+    url = &quot;mirror://gnu/which/${name}.tar.gz&quot;;
+    sha256 = &quot;1bgafvy3ypbhhfznwjv1lxmd6mci3x1byilnnkc7gcr486wlb8pl&quot;;
+  };
+
+  meta = with stdenv.lib; {
+    homepage = http://ftp.gnu.org/gnu/which/;
+    platforms = platforms.all;
+    license = licenses.gpl3;
+  };
+}</code></pre>
+<pre class="text"><code>$ ldd result/bin/which
+linux-gate.so.1 (0xb778e000)
+libc.so.6 =&gt; /nix/store/6nqfrgw8w5xmm0zarp8f51rvs9lvgq73-glibc-2.23/lib/libc.so.6 (0xb75ea000)
+/nix/store/6nqfrgw8w5xmm0zarp8f51rvs9lvgq73-glibc-2.23/lib/ld-linux.so.2 (0xb7790000)</code></pre>
+</div>
+<aside class="notes">
+<p>ldd - print shared library dependencies</p>
 </aside>
 </section>
 <section id="nix-1" class="slide level1">
@@ -266,7 +330,20 @@ f = x: x * x
 # This is a recursive set
 rec { a = b + 1; b = 5; }</code></pre>
 </section>
-<section id="the-which-package" class="slide level1">
+<section id="nixpkgs" class="slide level1">
+<h1>Nixpkgs</h1>
+<blockquote>
+<p>A collection of packages for the Nix package manager.</p>
+<p><a href="https://github.com/NixOS/nixpkgs" class="uri">https://github.com/NixOS/nixpkgs</a></p>
+</blockquote>
+<ul>
+<li>has nearly 6,500 packages</li>
+<li>uses a permissive MIT/X11 license</li>
+<li>includes a <a href="https://github.com/NixOS/nixpkgs/tree/master/lib">standard library</a> for Nix Expression Language</li>
+<li>supports GNU/Linux (<code>i686-linux</code> and <code>x86_64-linux</code>) and Mac OS X (<code>x86_64-darwin</code>)</li>
+</ul>
+</section>
+<section id="the-which-package-2" class="slide level1">
 <h1>The <code>which</code> package</h1>
 <div class="smallcode">
 <pre class="nix"><code>{ stdenv, fetchurl }:
@@ -285,35 +362,6 @@ stdenv.mkDerivation rec {
     license = licenses.gpl3;
   };
 }</code></pre>
-<pre><code>result/
-├── bin
-│   └── which
-└── share
-    ├── info
-    │   └── which.info
-    └── man
-        └── man1
-            └── which.1.gz</code></pre>
-</div>
-</section>
-<section id="user-environments" class="slide level1">
-<h1>User environments</h1>
-<figure class="stretch">
-<img src="img/user-envs.png" alt="">
-</figure>
-</section>
-<section id="nixpkgs" class="slide level1">
-<h1>Nixpkgs</h1>
-<blockquote>
-<p>A collection of packages for the Nix package manager.</p>
-<p><a href="https://github.com/NixOS/nixpkgs" class="uri">https://github.com/NixOS/nixpkgs</a></p>
-</blockquote>
-<ul>
-<li>has nearly 6,500 packages</li>
-<li>uses a permissive MIT/X11 license</li>
-<li>includes a <a href="https://github.com/NixOS/nixpkgs/tree/master/lib">standard library</a> for Nix Expression Language</li>
-<li>supports GNU/Linux (<code>i686-linux</code> and <code>x86_64-linux</code>) and Mac OS X (<code>x86_64-darwin</code>)</li>
-</ul>
 </section>
 <section id="nixos" class="slide level1">
 <h1>NixOS</h1>
@@ -330,6 +378,9 @@ stdenv.mkDerivation rec {
 <li>safe to test changes</li>
 <li>Nix goodness (multi-user package management, source-based model with binaries, consistency, ...)</li>
 </ul>
+<aside class="notes">
+<p>reliable = installing &amp; upgrading is like from scratch</p>
+</aside>
 </section>
 <section id="nixos-1" class="slide level1">
 <h1>NixOS</h1>
@@ -365,6 +416,16 @@ stdenv.mkDerivation rec {
 </section>
 <section id="nixos-2" class="slide level1">
 <h1>NixOS</h1>
+<p>Realise the configuration:</p>
+<pre class="text"><code>$ nixos-rebuild switch</code></pre>
+<p>Rollback to the previous configuration:</p>
+<pre class="text"><code>$ nixos-rebuild switch --rollback</code></pre>
+<p>Test configuration:</p>
+<pre class="text"><code>$ nixos-rebuild test
+$ nixos-rebuild build-vm</code></pre>
+</section>
+<section id="nixos-3" class="slide level1">
+<h1>NixOS</h1>
 <p>Build your own system config using:</p>
 <ul>
 <li>the <code>/etc/nixos/configuration.nix</code> file</li>
@@ -385,8 +446,8 @@ stdenv.mkDerivation rec {
 <li>define options depending on other options' values</li>
 </ul>
 </blockquote>
-<p><strong>Example</strong>: I want a boolean option <code>myCustomBashAliases</code> that defines some Bash aliases when enabled.</p>
 <p>Built-in options: <a href="https://nixos.org/nixos/options.html" class="uri">https://nixos.org/nixos/options.html</a></p>
+<p><strong>Example</strong>: I want a boolean option <code>myCustomBashAliases</code> that defines some Bash aliases when enabled.</p>
 </section>
 <section id="options-1" class="slide level1">
 <h1>Options</h1>
@@ -413,8 +474,8 @@ stdenv.mkDerivation rec {
 }</code></pre>
 </div>
 </section>
-<section id="option-usage" class="slide level1">
-<h1>Option usage</h1>
+<section id="options-usage" class="slide level1">
+<h1>Options usage</h1>
 <p>In <code>/etc/nixos/configuration.nix</code>:</p>
 <div class="smallcode">
 <pre class="nix"><code>{ config, pkgs, ... }:
@@ -435,7 +496,7 @@ stdenv.mkDerivation rec {
 </section>
 <section id="back-to-the-problem" class="slide level1">
 <h1>Back to the problem</h1>
-<p>I want to be able to create staging environments</p>
+<p>I want to be able to create staging environments:</p>
 <ul>
 <li>quickly</li>
 <li>easily</li>
@@ -478,7 +539,7 @@ stdenv.mkDerivation rec {
 <p>Nice features:</p>
 <ul>
 <li>multi-domain support (with redirections)</li>
-<li>TLS support (automatic certification generation with <a href="https://letsencrypt.org/">Let's Encrypt</a>)</li>
+<li>HTTPS support (automatic certification generation with <a href="https://letsencrypt.org/">Let's Encrypt</a>)</li>
 <li>per-app user, with SSH access (I can auto-deploy from GitLab \o/)</li>
 <li>per-app PHP version</li>
 <li>per-app Cron jobs</li>
@@ -496,6 +557,9 @@ stdenv.mkDerivation rec {
 <li><a href="https://lethalman.blogspot.fr/search/label/nixpills">Nix pills</a></li>
 <li><a href="https://nixos.org/docs/papers.html">Nix/NixOS papers</a></li>
 </ul>
+<figure class="stretch">
+<img src="img/reading.gif" alt="">
+</figure>
 </section>
 <section id="questions" class="slide level1">
 <h1>Questions?</h1>

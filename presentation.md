@@ -130,7 +130,7 @@ RUN apt-get update \
 This is fine. But:
 
 - you declare **how** to build an image<br>not **what** is the image you want to build
-- this is too linear (cache)
+- this is too linear (layers of cache)
 - it's hard to compose
 - ...
 
@@ -155,7 +155,7 @@ This is fine. But:
 - Nix
 - Nix Expression Language
 - Nixpkgs
-- NixOS (distribution)
+- NixOS (Linux distribution)
 - ...
 
 <div class="notes">
@@ -180,7 +180,7 @@ Builds are **reproducible**.
 
 # Nix store
 
-Where packages are stored. Usually in `/nix/store/`
+The place where packages are stored. Usually in `/nix/store/`
 
 Example:<br><small>`/nix/store/f4gxsj6pn4ygqadwyk2m6xg1ywhfwxg1-openssl-1.0.2h/`</small>
 
@@ -192,6 +192,80 @@ A package's directory name contains:
 
 <div class="notes">
 unique identifier = a cryptographic hash of the package’s build dependency graph
+</div>
+
+
+# User environments
+
+<figure class="stretch"><img src="img/user-envs.png" alt=""></figure>
+
+
+# The `which` package
+
+<div class="smallcode">
+```nix
+{ stdenv, fetchurl }:
+
+stdenv.mkDerivation rec {
+  name = "which-2.21";
+
+  src = fetchurl {
+    url = "mirror://gnu/which/${name}.tar.gz";
+    sha256 = "1bgafvy3ypbhhfznwjv1lxmd6mci3x1byilnnkc7gcr486wlb8pl";
+  };
+
+  meta = with stdenv.lib; {
+    homepage = http://ftp.gnu.org/gnu/which/;
+    platforms = platforms.all;
+    license = licenses.gpl3;
+  };
+}
+```
+```text
+result/
+├── bin
+│   └── which
+└── share
+    ├── info
+    │   └── which.info
+    └── man
+        └── man1
+            └── which.1.gz
+```
+</div>
+
+
+# The `which` package
+
+<div class="smallcode">
+```nix
+{ stdenv, fetchurl }:
+
+stdenv.mkDerivation rec {
+  name = "which-2.21";
+
+  src = fetchurl {
+    url = "mirror://gnu/which/${name}.tar.gz";
+    sha256 = "1bgafvy3ypbhhfznwjv1lxmd6mci3x1byilnnkc7gcr486wlb8pl";
+  };
+
+  meta = with stdenv.lib; {
+    homepage = http://ftp.gnu.org/gnu/which/;
+    platforms = platforms.all;
+    license = licenses.gpl3;
+  };
+}
+```
+```text
+$ ldd result/bin/which
+linux-gate.so.1 (0xb778e000)
+libc.so.6 => /nix/store/6nqfrgw8w5xmm0zarp8f51rvs9lvgq73-glibc-2.23/lib/libc.so.6 (0xb75ea000)
+/nix/store/6nqfrgw8w5xmm0zarp8f51rvs9lvgq73-glibc-2.23/lib/ld-linux.so.2 (0xb7790000)
+```
+</div>
+
+<div class="notes">
+ldd - print shared library dependencies
 </div>
 
 
@@ -243,6 +317,19 @@ f = x: x * x
 rec { a = b + 1; b = 5; }
 ```
 
+
+# Nixpkgs
+
+> A collection of packages for the Nix package manager.
+>
+> <https://github.com/NixOS/nixpkgs>
+
+- has nearly 6,500 packages
+- uses a permissive MIT/X11 license
+- includes a [standard library](https://github.com/NixOS/nixpkgs/tree/master/lib) for Nix Expression Language
+- supports GNU/Linux (`i686-linux` and `x86_64-linux`) and Mac OS X (`x86_64-darwin`)
+
+
 # The `which` package
 
 <div class="smallcode">
@@ -264,34 +351,6 @@ stdenv.mkDerivation rec {
   };
 }
 ```
-```
-result/
-├── bin
-│   └── which
-└── share
-    ├── info
-    │   └── which.info
-    └── man
-        └── man1
-            └── which.1.gz
-```
-</div>
-
-# User environments
-
-<figure class="stretch"><img src="img/user-envs.png" alt=""></figure>
-
-
-# Nixpkgs
-
-> A collection of packages for the Nix package manager.
->
-> <https://github.com/NixOS/nixpkgs>
-
-- has nearly 6,500 packages
-- uses a permissive MIT/X11 license
-- includes a [standard library](https://github.com/NixOS/nixpkgs/tree/master/lib) for Nix Expression Language
-- supports GNU/Linux (`i686-linux` and `x86_64-linux`) and Mac OS X (`x86_64-darwin`)
 
 
 # NixOS
@@ -307,6 +366,10 @@ The Purely Functional Linux Distribution
 - reproducible system configurations
 - safe to test changes
 - Nix goodness (multi-user package management, source-based model with binaries, consistency, ...)
+
+<div class="notes">
+reliable = installing & upgrading is like from scratch
+</div>
 
 
 # NixOS
@@ -346,6 +409,28 @@ The Purely Functional Linux Distribution
 
 # NixOS
 
+Realise the configuration:
+
+```text
+$ nixos-rebuild switch
+```
+
+Rollback to the previous configuration:
+
+```text
+$ nixos-rebuild switch --rollback
+```
+
+Test configuration:
+
+```text
+$ nixos-rebuild test
+$ nixos-rebuild build-vm
+```
+
+
+# NixOS
+
 Build your own system config using:
 
 - the `/etc/nixos/configuration.nix` file
@@ -363,9 +448,9 @@ Build your own system config using:
 > - declare options
 > - define options depending on other options' values
 
-**Example**: I want a boolean option `myCustomBashAliases` that defines some Bash aliases when enabled.
-
 Built-in options: <https://nixos.org/nixos/options.html>
+
+**Example**: I want a boolean option `myCustomBashAliases` that defines some Bash aliases when enabled.
 
 
 # Options
@@ -397,7 +482,7 @@ In `/etc/nixos/myModule.nix`:
 </div>
 
 
-# Option usage
+# Options usage
 
 In `/etc/nixos/configuration.nix`:
 
@@ -424,7 +509,7 @@ This allows to build very powerful abstractions!
 
 # Back to the problem
 
-I want to be able to create staging environments
+I want to be able to create staging environments:
 
 - quickly
 - easily
@@ -471,7 +556,7 @@ High-level definition of staging environments:
 Nice features:
 
 - multi-domain support (with redirections)
-- TLS support (automatic certification generation with [Let's Encrypt](https://letsencrypt.org/))
+- HTTPS support (automatic certification generation with [Let's Encrypt](https://letsencrypt.org/))
 - per-app user, with SSH access (I can auto-deploy from GitLab \\o/)
 - per-app PHP version
 - per-app Cron jobs
@@ -486,6 +571,8 @@ Nice features:
 - [Nixpkgs source code](https://github.com/NixOS/nixpkgs)
 - [Nix pills](https://lethalman.blogspot.fr/search/label/nixpills)
 - [Nix/NixOS papers](https://nixos.org/docs/papers.html)
+
+<figure class="stretch"><img src="img/reading.gif" alt=""></figure>
 
 
 # Questions?
