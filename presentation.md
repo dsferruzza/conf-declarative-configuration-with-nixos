@@ -650,26 +650,3 @@ Twitter: [\@d_sferruzza](https://twitter.com/d\_sferruzza)
 Slides on GitHub:
 
 [dsferruzza/conf-immutable-infrastructure-with-nixos](http://github.com/dsferruzza/conf-immutable-infrastructure-with-nixos)
-
-<div class="notes">
-# nix pros
-
-- nix-shell
-- customization (upstream/override)
-- rollback
-- upgrade = atomic
-- don't look at the old state / no feedback loop
-- sharing mechanism
-- programming a package
-- can package closed-source programs
-
-Sander's talk 27:32
-
-# other tools
-
-- Chef
-- Puppet
-- CFEngine
-
-initial state unknown (?) &rarr; spec is not complete
-</div>
