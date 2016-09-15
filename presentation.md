@@ -36,6 +36,10 @@ They should be:
 
 <figure class="stretch"><img src="img/cups.gif" alt=""></figure>
 
+<div class="notes">
+This shoud be a **convenience**.
+</div>
+
 
 # About automatic deployment
 
@@ -43,7 +47,7 @@ We use [GitLab](https://about.gitlab.com/)
 
 <figure class="stretch"><img src="img/gitlab.svg" alt=""></figure>
 
-> GitLab unifies chat, issues, code review, CI and CD into a single UI
+> GitLab unifies chat, issues, code review,<br>CI and CD into a single UI
 
 
 # About automatic deployment
@@ -84,9 +88,9 @@ And let's install **and** *configure*:
 
 It works but:
 
-- it needs a lot of manual setup<br>=> admins need to be watchful and rigorous
-- environments can diverge<br>=> it can quickly become a mess
-- security/system updates can break stuff<br>=> you need to fix environments one by one
+- it needs a lot of manual setup<br>&rarr; admins need to be watchful and rigorous
+- environments can diverge<br>&rarr; it can quickly become a mess
+- security/system updates can break stuff<br>&rarr; you need to fix environments one by one
 - it's soooo **boring** to use
 
 > Boring means I will make mistakes
@@ -133,7 +137,7 @@ This is fine. But:
 <figure class="stretch"><img src="img/this-is-fine.jpg" alt=""></figure>
 
 
-# Declarative vs imperative
+# Declarative vs. imperative
 
 > **Imperative programming**: use statements that change a program's state
 >
@@ -182,8 +186,8 @@ Example:<br><small>`/nix/store/f4gxsj6pn4ygqadwyk2m6xg1ywhfwxg1-openssl-1.0.2h/`
 
 A package's directory name contains:
 
-- it's name
-- it's version
+- its name
+- its version
 - a unique identifier that captures all its dependencies
 
 <div class="notes">
@@ -359,7 +363,7 @@ Build your own system config using:
 > - declare options
 > - define options depending on other options' values
 
-**Example**: I want a boolean option `myCustomBashAliases` that define some Bash aliases when enabled.
+**Example**: I want a boolean option `myCustomBashAliases` that defines some Bash aliases when enabled.
 
 Built-in options: <https://nixos.org/nixos/options.html>
 
@@ -426,7 +430,7 @@ I want to be able to create staging environments
 - easily
 - in a reliable way
 
-=> Let's write some NixOS modules!
+&rarr; Let's write some NixOS modules!
 
 <figure class="stretch"><img src="img/lets-do-this.gif" alt=""></figure>
 
@@ -514,5 +518,5 @@ Sander's talk 27:32
 - Puppet
 - CFEngine
 
-initial state unknown (?) => spec is not complete
+initial state unknown (?) &rarr; spec is not complete
 </div>
