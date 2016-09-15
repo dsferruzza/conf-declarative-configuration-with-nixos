@@ -421,6 +421,12 @@ Rollback to the previous configuration:
 $ nixos-rebuild switch --rollback
 ```
 
+Only build configuration:
+
+```text
+$ nixos-rebuild build
+```
+
 Test configuration:
 
 ```text
@@ -566,6 +572,29 @@ Nice features:
 
 # Bonus: nix-shell
 
+Drop a Bash shell configured with the same environment that would be used to perform the build itself.
+
+<div class="smallcode">
+```text
+$ nix-shell '<nixpkgs>' -A nodejs-5_x
+
+these paths will be fetched (21.40 MiB download, 21.41 MiB unpacked):
+  /nix/store/mbv89fkb9av98alqfaay8c4n3czk82q9-node-v5.9.0.tar.gz
+fetching path ‘/nix/store/mbv89fkb9av98alqfaay8c4n3czk82q9-node-v5.9.0.tar.gz’...
+
+*** Downloading ‘https://cache.nixos.org/nar/0qzzksfad1g8kk3rfpdiyhdp9h5737nn70zywakarc2lf3qhg0g1.nar.xz’ (signed by ‘cache.nixos.org-1’) to ‘/nix/store/mbv89fkb9av98alqfaay8c4n3czk82q9-node-v5.9.0.tar.gz’...
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100 21.4M  100 21.4M    0     0  1173k      0  0:00:18  0:00:18 --:--:-- 1374k
+
+
+[nix-shell:~]$
+```
+</div>
+
+
+# Bonus: package customization
+
 <div class="smallcode">
 ```nix
 nixpkgs.config.packageOverrides = pkgs: rec {
@@ -582,15 +611,28 @@ nixpkgs.config.packageOverrides = pkgs: rec {
 ```
 </div>
 
+<figure class="stretch"><img src="img/mind-blown.gif" alt=""></figure>
 
-# Bonus: customization
+<div class="notes">
+completely override package, not only the installed instance
+</div>
 
 
+# Conclusion
+
+Nix & NixOS have very interesting properties that can make server management **easier** and **safer**.
+
+You can use software practices to do sysadmin: modularity, DRY, versioning, abstractions, ...
+
+> The NixOS project is still a bit young, but it grows and you should definitely take a look!
+>
+> &rarr; <https://nixos.org>
 
 
 # References
 
 - [NixOS manual](https://nixos.org/nixos/manual/)
+- [NixOS options](http://nixos.org/nixos/options.html) & [NixOS packages](http://nixos.org/nixos/packages.html)
 - [Nix manual](https://nixos.org/nix/manual/)
 - [Nixpkgs source code](https://github.com/NixOS/nixpkgs)
 - [Nix pills](https://lethalman.blogspot.fr/search/label/nixpills)

@@ -420,6 +420,8 @@ stdenv.mkDerivation rec {
 <pre class="text"><code>$ nixos-rebuild switch</code></pre>
 <p>Rollback to the previous configuration:</p>
 <pre class="text"><code>$ nixos-rebuild switch --rollback</code></pre>
+<p>Only build configuration:</p>
+<pre class="text"><code>$ nixos-rebuild build</code></pre>
 <p>Test configuration:</p>
 <pre class="text"><code>$ nixos-rebuild test
 $ nixos-rebuild build-vm</code></pre>
@@ -550,6 +552,25 @@ $ nixos-rebuild build-vm</code></pre>
 </section>
 <section id="bonus-nix-shell" class="slide level1">
 <h1>Bonus: nix-shell</h1>
+<p>Drop a Bash shell configured with the same environment that would be used to perform the build itself.</p>
+<div class="smallcode">
+<pre class="text"><code>$ nix-shell &#39;&lt;nixpkgs&gt;&#39; -A nodejs-5_x
+
+these paths will be fetched (21.40 MiB download, 21.41 MiB unpacked):
+  /nix/store/mbv89fkb9av98alqfaay8c4n3czk82q9-node-v5.9.0.tar.gz
+fetching path ‘/nix/store/mbv89fkb9av98alqfaay8c4n3czk82q9-node-v5.9.0.tar.gz’...
+
+*** Downloading ‘https://cache.nixos.org/nar/0qzzksfad1g8kk3rfpdiyhdp9h5737nn70zywakarc2lf3qhg0g1.nar.xz’ (signed by ‘cache.nixos.org-1’) to ‘/nix/store/mbv89fkb9av98alqfaay8c4n3czk82q9-node-v5.9.0.tar.gz’...
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100 21.4M  100 21.4M    0     0  1173k      0  0:00:18  0:00:18 --:--:-- 1374k
+
+
+[nix-shell:~]$</code></pre>
+</div>
+</section>
+<section id="bonus-package-customization" class="slide level1">
+<h1>Bonus: package customization</h1>
 <div class="smallcode">
 <pre class="nix"><code>nixpkgs.config.packageOverrides = pkgs: rec {
   simp_le = pkgs.simp_le.overrideDerivation (oldAttrs: {
@@ -563,14 +584,27 @@ $ nixos-rebuild build-vm</code></pre>
   });
 };</code></pre>
 </div>
+<figure class="stretch">
+<img src="img/mind-blown.gif" alt="">
+</figure>
+<aside class="notes">
+<p>completely override package, not only the installed instance</p>
+</aside>
 </section>
-<section id="bonus-customization" class="slide level1">
-<h1>Bonus: customization</h1>
+<section id="conclusion" class="slide level1">
+<h1>Conclusion</h1>
+<p>Nix &amp; NixOS have very interesting properties that can make server management <strong>easier</strong> and <strong>safer</strong>.</p>
+<p>You can use software practices to do sysadmin: modularity, DRY, versioning, abstractions, ...</p>
+<blockquote>
+<p>The NixOS project is still a bit young, but it grows and you should definitely take a look!</p>
+<p>→ <a href="https://nixos.org" class="uri">https://nixos.org</a></p>
+</blockquote>
 </section>
 <section id="references" class="slide level1">
 <h1>References</h1>
 <ul>
 <li><a href="https://nixos.org/nixos/manual/">NixOS manual</a></li>
+<li><a href="http://nixos.org/nixos/options.html">NixOS options</a> &amp; <a href="http://nixos.org/nixos/packages.html">NixOS packages</a></li>
 <li><a href="https://nixos.org/nix/manual/">Nix manual</a></li>
 <li><a href="https://github.com/NixOS/nixpkgs">Nixpkgs source code</a></li>
 <li><a href="https://lethalman.blogspot.fr/search/label/nixpills">Nix pills</a></li>
