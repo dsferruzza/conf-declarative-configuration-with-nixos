@@ -70,6 +70,9 @@
 <figure class="stretch">
 <img src="img/cups.gif" alt="">
 </figure>
+<aside class="notes">
+<p>This shoud be a <strong>convenience</strong>.</p>
+</aside>
 </section>
 <section id="about-automatic-deployment" class="slide level1">
 <h1>About automatic deployment</h1>
@@ -78,7 +81,7 @@
 <img src="img/gitlab.svg" alt="">
 </figure>
 <blockquote>
-<p>GitLab unifies chat, issues, code review, CI and CD into a single UI</p>
+<p>GitLab unifies chat, issues, code review,<br>CI and CD into a single UI</p>
 </blockquote>
 </section>
 <section id="about-automatic-deployment-1" class="slide level1">
@@ -114,9 +117,9 @@
 <h1>Naive solution</h1>
 <p>It works but:</p>
 <ul>
-<li>it needs a lot of manual setup<br>=&gt; admins need to be watchful and rigorous</li>
-<li>environments can diverge<br>=&gt; it can quickly become a mess</li>
-<li>security/system updates can break stuff<br>=&gt; you need to fix environments one by one</li>
+<li>it needs a lot of manual setup<br>→ admins need to be watchful and rigorous</li>
+<li>environments can diverge<br>→ it can quickly become a mess</li>
+<li>security/system updates can break stuff<br>→ you need to fix environments one by one</li>
 <li>it's soooo <strong>boring</strong> to use</li>
 </ul>
 <blockquote>
@@ -159,8 +162,8 @@ RUN apt-get update \
 <img src="img/this-is-fine.jpg" alt="">
 </figure>
 </section>
-<section id="declarative-vs-imperative" class="slide level1">
-<h1>Declarative vs imperative</h1>
+<section id="declarative-vs.-imperative" class="slide level1">
+<h1>Declarative vs. imperative</h1>
 <blockquote>
 <p><strong>Imperative programming</strong>: use statements that change a program's state</p>
 <p><strong>Declarative programming</strong>: express the logic of a computation without describing its control flow</p>
@@ -209,8 +212,8 @@ RUN apt-get update \
 <p>Example:<br><small><code>/nix/store/f4gxsj6pn4ygqadwyk2m6xg1ywhfwxg1-openssl-1.0.2h/</code></small></p>
 <p>A package's directory name contains:</p>
 <ul>
-<li>it's name</li>
-<li>it's version</li>
+<li>its name</li>
+<li>its version</li>
 <li>a unique identifier that captures all its dependencies</li>
 </ul>
 <aside class="notes">
@@ -382,7 +385,7 @@ stdenv.mkDerivation rec {
 <li>define options depending on other options' values</li>
 </ul>
 </blockquote>
-<p><strong>Example</strong>: I want a boolean option <code>myCustomBashAliases</code> that define some Bash aliases when enabled.</p>
+<p><strong>Example</strong>: I want a boolean option <code>myCustomBashAliases</code> that defines some Bash aliases when enabled.</p>
 <p>Built-in options: <a href="https://nixos.org/nixos/options.html" class="uri">https://nixos.org/nixos/options.html</a></p>
 </section>
 <section id="options-1" class="slide level1">
@@ -438,7 +441,7 @@ stdenv.mkDerivation rec {
 <li>easily</li>
 <li>in a reliable way</li>
 </ul>
-<p>=&gt; Let's write some NixOS modules!</p>
+<p>→ Let's write some NixOS modules!</p>
 <figure class="stretch">
 <img src="img/lets-do-this.gif" alt="">
 </figure>
@@ -521,7 +524,7 @@ stdenv.mkDerivation rec {
 <li>Puppet</li>
 <li>CFEngine</li>
 </ul>
-<p>initial state unknown (?) =&gt; spec is not complete</p>
+<p>initial state unknown (?) → spec is not complete</p>
 </aside>
 </section>
     </div>
