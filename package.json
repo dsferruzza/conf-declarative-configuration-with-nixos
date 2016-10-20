@@ -5,8 +5,8 @@
     "watch-run": "1.2.4"
   },
   "devDependencies": {
-    "highlight.js": "9.6.0",
-    "node-sass": "3.8.0"
+    "highlight.js": "9.7.0",
+    "node-sass": "3.10.1"
   },
   "scripts": {
     "pandocVersion": "pandoc -v",
