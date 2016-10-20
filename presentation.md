@@ -1,13 +1,13 @@
 % How immutable infrastructure and declarative configuration removed the pain of managing my servers
 % David Sferruzza
-% 16/09/2016
+% 21/19/2016
 
 
 # About me
 
 - [\@d_sferruzza](https://twitter.com/d\_sferruzza)
 - [github.com/dsferruzza](https://github.com/dsferruzza)
-- Head of Research at [Startup Palace](http://www.startup-palace.com)
+- Head of Research and Development at [Startup Palace](https://www.startup-palace.com)
 - PhD student in software engineering at *University of Nantes*
 
 <figure class="stretch"><img src="img/sp.gif" alt=""></figure>
