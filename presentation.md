@@ -1,6 +1,6 @@
 % How immutable infrastructure and declarative configuration removed the pain of managing my servers
 % David Sferruzza
-% 21/19/2016
+% 21/10/2016
 
 
 # About me
