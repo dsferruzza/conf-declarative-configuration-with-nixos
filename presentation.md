@@ -1,4 +1,4 @@
-% How immutable infrastructure and declarative configuration removed the pain of managing my servers
+% Declarative configuration with NixOS
 % David Sferruzza
 % 10/02/2017
 
@@ -195,11 +195,6 @@ unique identifier = a cryptographic hash of the package’s build dependency gra
 </div>
 
 
-# User environments
-
-<figure class="stretch"><img src="img/user-envs.png" alt=""></figure>
-
-
 # The `which` package
 
 <div class="smallcode">
@@ -284,6 +279,11 @@ Nice features:
 <div class="notes">
 build & runtime dependencies
 </div>
+
+
+# User environments
+
+<figure class="stretch"><img src="img/user-envs.png" alt=""></figure>
 
 
 # Nix Expression Language
