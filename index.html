@@ -5,7 +5,7 @@
   <meta name="generator" content="pandoc">
   <meta name="author" content="David Sferruzza">
   <meta name="dcterms.date" content="2017-10-02">
-  <title>How immutable infrastructure and declarative configuration removed the pain of managing my servers</title>
+  <title>Declarative configuration with NixOS</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
@@ -29,7 +29,7 @@
     <div class="slides">
 
 <section>
-  <h1 class="title">How immutable infrastructure and declarative configuration removed the pain of managing my servers</h1>
+  <h1 class="title">Declarative configuration with NixOS</h1>
   <h2 class="author">David Sferruzza</h2>
   <h3 class="date">10/02/2017</h3>
 </section>
@@ -220,12 +220,6 @@ RUN apt-get update \
 <p>unique identifier = a cryptographic hash of the package’s build dependency graph</p>
 </aside>
 </section>
-<section id="user-environments" class="slide level1">
-<h1>User environments</h1>
-<figure class="stretch">
-<img src="img/user-envs.png" alt="">
-</figure>
-</section>
 <section id="the-which-package" class="slide level1">
 <h1>The <code>which</code> package</h1>
 <div class="smallcode">
@@ -300,6 +294,12 @@ libc.so.6 =&gt; /nix/store/6nqfrgw8w5xmm0zarp8f51rvs9lvgq73-glibc-2.23/lib/libc.
 <aside class="notes">
 <p>build &amp; runtime dependencies</p>
 </aside>
+</section>
+<section id="user-environments" class="slide level1">
+<h1>User environments</h1>
+<figure class="stretch">
+<img src="img/user-envs.png" alt="">
+</figure>
 </section>
 <section id="nix-expression-language" class="slide level1">
 <h1>Nix Expression Language</h1>
