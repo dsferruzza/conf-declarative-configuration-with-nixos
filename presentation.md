@@ -1,6 +1,6 @@
 % Declarative configuration with NixOS
 % David Sferruzza
-% 10/02/2017
+% 2017-04-05
 
 
 # About me
