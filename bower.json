@@ -1,9 +1,0 @@
-{
-  "name": "presentation-starter",
-  "private": true,
-  "dependencies": {
-    "lato-font": "2.0.0",
-    "reveal.js": "3.3.0",
-    "roboto-slab-font": "ce7979c9be"
-  }
-}
